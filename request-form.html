@@ -1,0 +1,29 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@latest/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <main class="container py-5">
+        <h1>Request a tutoring session</h1>
+            
+        <form class="request-form" action="process-request.php" method="post">        
+            <div class="form-group">
+                <label for="course">Course</label>
+                <input id="course" name="course" class="form-control required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Preferred date</label>
+                <input id="date" name="date" class="form-control" type="date" required>
+            </div>
+    
+			<button type="submit">Request session</button>
+        </form>
+    </main>
+</body>
+
+</html>

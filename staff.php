@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
-$user = require_login(['personnel', 'admin']);
+$user = requireLogin(['personnel', 'admin']);
 $definitions = [
     'donors' => [
         'title' => 'Donors',
@@ -25,7 +25,7 @@ $definitions = [
             ['emergency_contact_name', 'Emergency contact', 'text', false],
             ['emergency_contact_phone', 'Emergency contact phone', 'text', false],
             ['emergency_contact_email', 'Emergency contact email', 'email', false],
-            ['blood_type', 'Blood type', 'blood_types', true],
+            ['blood_type', 'Blood type', 'bloodTypes', true],
             ['weight_lbs', 'Weight (lb)', 'number', false],
             ['height_inches', 'Height (in)', 'number', false],
         ],
@@ -49,7 +49,7 @@ $definitions = [
             ['center_id', 'Donation center', 'centers', true],
             ['doctor_id', 'Doctor', 'doctors', false],
             ['nurse_id', 'Nurse', 'nurses', false],
-            ['blood_type', 'Blood type', 'blood_types', true],
+            ['blood_type', 'Blood type', 'bloodTypes', true],
             ['amount_ml', 'Amount (mL)', 'number', true],
             ['donated_at', 'Donation date and time (UTC)', 'datetime-local', true],
         ],
@@ -100,7 +100,7 @@ $errors = [];
 $formValues = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verify_csrf();
+    verifyCsrf();
     $action = (string) ($_POST['action'] ?? '');
     $recordId = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT);
 
@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ) {
                     $errors[] = 'Enter nine digits for the Social Security number.';
                 } else {
-                    $data['ssn_hash'] = ssn_hmac($digits);
+                    $data['ssn_hash'] = ssnHmac($digits);
                 }
                 continue;
             }
@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $options = [
-                'blood_types' => blood_types(),
+                'bloodTypes' => bloodTypes(),
                 'personnel_types' => ['doctor', 'nurse', 'staff'],
                 'appointment_statuses' => ['booked', 'cancelled', 'completed'],
                 'roles' => ['donor', 'personnel', 'admin'],
@@ -297,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-function staff_options(string $type): array
+function staffOptions(string $type): array
 {
     $queries = [
         'donor_users' => 'SELECT id, email AS label FROM users WHERE role = "donor" ORDER BY email',
@@ -320,7 +320,7 @@ function staff_options(string $type): array
     return db()->query($queries[$type])->fetchAll();
 }
 
-function staff_field_value(array $record, array $field): string
+function staffFieldValue(array $record, array $field): string
 {
     [$name, , $type] = $field;
 
@@ -342,7 +342,7 @@ $recordStatement = db()->query(
 );
 $records = $recordStatement->fetchAll();
 
-render_header('Staff workspace');
+renderHeader('Staff workspace');
 ?>
 <section class="page-heading">
     <p class="eyebrow"><?= e(ucfirst($user['role'])) ?> workspace</p>
@@ -364,17 +364,17 @@ render_header('Staff workspace');
         <p class="eyebrow">New record</p>
         <h2>Add <?= e(strtolower(rtrim($definition['title'], 's'))) ?></h2>
         <form method="post" action="staff.php?entity=<?= e($entity) ?>">
-            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="entity" value="<?= e($entity) ?>">
             <input type="hidden" name="action" value="create">
             <?php foreach ($definition['fields'] as $field): ?>
                 <?php
                 [$name, $label, $type, $required] = $field;
                 $required = $required && $type !== 'ssn';
-                if ($type === 'blood_types') {
+                if ($type === 'bloodTypes') {
                     $choices = array_map(static function (string $value): array {
                         return ['id' => $value, 'label' => $value];
-                    }, blood_types());
+                    }, bloodTypes());
                 } elseif ($type === 'personnel_types') {
                     $choices = array_map(static function (string $value): array {
                         return ['id' => $value, 'label' => ucfirst($value)];
@@ -388,13 +388,13 @@ render_header('Staff workspace');
                         return ['id' => $value, 'label' => ucfirst($value)];
                     }, ['donor', 'personnel', 'admin']);
                 } elseif (in_array($type, ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'], true)) {
-                    $choices = staff_options($type);
+                    $choices = staffOptions($type);
                 } else {
                     $choices = [];
                 }
                 ?>
                 <label><?= e($label) ?>
-                    <?php if ($choices !== [] || in_array($type, ['blood_types', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
+                    <?php if ($choices !== [] || in_array($type, ['bloodTypes', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
                         <select name="<?= e($name) ?>" <?= $required ? 'required' : '' ?>>
                             <?php if (!$required): ?><option value="">Not assigned</option><?php endif; ?>
                             <?php foreach ($choices as $choice): ?>
@@ -449,7 +449,7 @@ render_header('Staff workspace');
                     <span class="record-id">#<?= (int) $record['id'] ?> · Edit</span>
                 </summary>
                 <form method="post" action="staff.php?entity=<?= e($entity) ?>" class="record-edit-form">
-                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
                     <input type="hidden" name="entity" value="<?= e($entity) ?>">
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="record_id" value="<?= (int) $record['id'] ?>">
@@ -457,10 +457,10 @@ render_header('Staff workspace');
                         <?php foreach ($definition['fields'] as $field): ?>
                             <?php
                             [$name, $label, $type, $required] = $field;
-                            if ($type === 'blood_types') {
+                            if ($type === 'bloodTypes') {
                                 $choices = array_map(static function (string $value): array {
                                     return ['id' => $value, 'label' => $value];
-                                }, blood_types());
+                                }, bloodTypes());
                             } elseif ($type === 'personnel_types') {
                                 $choices = array_map(static function (string $value): array {
                                     return ['id' => $value, 'label' => ucfirst($value)];
@@ -474,14 +474,14 @@ render_header('Staff workspace');
                                     return ['id' => $value, 'label' => ucfirst($value)];
                                 }, ['donor', 'personnel', 'admin']);
                             } elseif (in_array($type, ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'], true)) {
-                                $choices = staff_options($type);
+                                $choices = staffOptions($type);
                             } else {
                                 $choices = [];
                             }
                             $optional = in_array($type, ['ssn', 'password'], true) || !$required;
                             ?>
                             <label><?= e($label) ?>
-                                <?php if ($choices !== [] || in_array($type, ['blood_types', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
+                                <?php if ($choices !== [] || in_array($type, ['bloodTypes', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
                                     <select name="<?= e($name) ?>" <?= $required ? 'required' : '' ?>>
                                         <?php if ($optional): ?><option value="">Not assigned</option><?php endif; ?>
                                         <?php foreach ($choices as $choice): ?>
@@ -498,7 +498,7 @@ render_header('Staff workspace');
                                         <?= $type === 'number' ? 'step="0.1" min="0"' : '' ?>
                                         <?= $type === 'integer' ? 'step="1" min="0"' : '' ?>
                                         <?= $type === 'password' ? 'minlength="10" autocomplete="new-password"' : '' ?>
-                                        value="<?= e(staff_field_value($record, $field)) ?>"
+                                        value="<?= e(staffFieldValue($record, $field)) ?>"
                                     >
                                 <?php endif; ?>
                             </label>
@@ -509,7 +509,7 @@ render_header('Staff workspace');
                     </div>
                 </form>
                 <form method="post" action="staff.php?entity=<?= e($entity) ?>" class="delete-form" onsubmit="return confirm('Delete this record? Related records may also be removed.');">
-                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
                     <input type="hidden" name="entity" value="<?= e($entity) ?>">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="record_id" value="<?= (int) $record['id'] ?>">
@@ -519,4 +519,4 @@ render_header('Staff workspace');
         <?php endforeach; ?>
     </div>
 </section>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

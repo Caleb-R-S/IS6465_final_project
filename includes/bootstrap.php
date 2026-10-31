@@ -14,26 +14,26 @@ function e(?string $value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-function csrf_token(): string
+function csrfToken(): string
 {
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    if (empty($_SESSION['csrfToken'])) {
+        $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
     }
 
-    return $_SESSION['csrf_token'];
+    return $_SESSION['csrfToken'];
 }
 
-function verify_csrf(): void
+function verifyCsrf(): void
 {
-    $submittedToken = $_POST['csrf_token'] ?? '';
+    $submittedToken = $_POST['csrfToken'] ?? '';
 
-    if (!is_string($submittedToken) || !hash_equals(csrf_token(), $submittedToken)) {
+    if (!is_string($submittedToken) || !hash_equals(csrfToken(), $submittedToken)) {
         http_response_code(400);
         exit('The form expired. Please go back, reload the page, and try again.');
     }
 }
 
-function current_user(): ?array
+function currentUser(): ?array
 {
     static $loaded = false;
     static $user = null;
@@ -65,9 +65,9 @@ function current_user(): ?array
     return $user;
 }
 
-function require_login(array $roles = []): array
+function requireLogin(array $roles = []): array
 {
-    $user = current_user();
+    $user = currentUser();
 
     if ($user === null) {
         flash('error', 'Please sign in to continue.');
@@ -87,7 +87,7 @@ function flash(string $type, string $message): void
     $_SESSION['flash'] = ['type' => $type, 'message' => $message];
 }
 
-function take_flash(): ?array
+function takeFlash(): ?array
 {
     $message = $_SESSION['flash'] ?? null;
     unset($_SESSION['flash']);
@@ -101,12 +101,12 @@ function redirect(string $path): void
     exit;
 }
 
-function blood_types(): array
+function bloodTypes(): array
 {
     return ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 }
 
-function ssn_hmac(string $digits): string
+function ssnHmac(string $digits): string
 {
     $key = getenv('BIOMAT_SSN_HMAC_KEY');
 
@@ -144,7 +144,7 @@ function ssn_hmac(string $digits): string
     return hash_hmac('sha256', $digits, $key);
 }
 
-function render_datetime(?string $value): string
+function renderDatetime(?string $value): string
 {
     if ($value === null || $value === '') {
         return '—';

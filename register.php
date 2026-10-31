@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
-if (current_user() !== null) {
+if (currentUser() !== null) {
     redirect('index.php');
 }
 
@@ -24,7 +24,7 @@ $values = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verify_csrf();
+    verifyCsrf();
 
     foreach ($values as $field => $value) {
         $values[$field] = trim((string) ($_POST[$field] ?? $value));
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen($password) < 10) {
         $errors[] = 'Choose a password with at least 10 characters.';
     }
-    if (!in_array($bloodType, blood_types(), true)) {
+    if (!in_array($bloodType, bloodTypes(), true)) {
         $errors[] = 'Choose a valid blood type.';
     }
 
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'first_name' => $values['first_name'],
                 'last_name' => $values['last_name'],
                 'date_of_birth' => $values['date_of_birth'],
-                'ssn_hash' => ssn_hmac($ssn),
+                'ssn_hash' => ssnHmac($ssn),
                 'email' => $values['email'],
                 'phone' => $values['phone'],
                 'address_line' => $values['address_line'],
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-render_header('Create donor account');
+renderHeader('Create donor account');
 ?>
 <section class="form-layout">
     <div class="form-intro">
@@ -144,7 +144,7 @@ render_header('Create donor account');
             </div>
         <?php endif; ?>
         <form method="post" action="register.php">
-            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
             <div class="field-grid">
                 <label>First name<input name="first_name" autocomplete="given-name" required value="<?= e($values['first_name']) ?>"></label>
                 <label>Last name<input name="last_name" autocomplete="family-name" required value="<?= e($values['last_name']) ?>"></label>
@@ -159,7 +159,7 @@ render_header('Create donor account');
                 <label>Blood type
                     <select name="blood_type" required>
                         <option value="">Select</option>
-                        <?php foreach (blood_types() as $bloodType): ?>
+                        <?php foreach (bloodTypes() as $bloodType): ?>
                             <option value="<?= e($bloodType) ?>" <?= $selectedBloodType === $bloodType ? 'selected' : '' ?>><?= e($bloodType) ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -172,4 +172,4 @@ render_header('Create donor account');
         </form>
     </div>
 </section>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

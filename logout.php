@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit('Use the sign-out form to end your session.');
 }
 
-verify_csrf();
+verifyCsrf();
 $_SESSION = [];
 session_regenerate_id(true);
 flash('success', 'You have been signed out.');

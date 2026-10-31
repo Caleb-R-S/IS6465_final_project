@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
-$user = require_login(['donor']);
+$user = requireLogin(['donor']);
 
 if ($user['donor_id'] === null) {
     http_response_code(404);
@@ -38,7 +38,7 @@ if ($editingId !== null && $editingId !== false) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verify_csrf();
+    verifyCsrf();
     $action = (string) ($_POST['action'] ?? '');
 
     if ($action === 'cancel') {
@@ -141,7 +141,7 @@ $appointmentStatement = db()->prepare(
 $appointmentStatement->execute(['donor_id' => $user['donor_id']]);
 $appointments = $appointmentStatement->fetchAll();
 
-render_header('My appointments');
+renderHeader('My appointments');
 ?>
 <section class="page-heading">
     <p class="eyebrow">Plan your next visit</p>
@@ -155,7 +155,7 @@ render_header('My appointments');
             <div class="notice notice-error" role="alert"><ul><?php foreach ($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul></div>
         <?php endif; ?>
         <form method="post" action="<?= $editingAppointment === null ? 'appointments.php' : 'appointments.php?edit=' . (int) $editingAppointment['id'] ?>">
-            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="action" value="save">
             <label>Donation center
                 <select name="center_id" required>
@@ -191,13 +191,13 @@ render_header('My appointments');
                     <div class="appointment-detail">
                         <span class="status status-<?= e($appointment['status']) ?>"><?= e(ucfirst($appointment['status'])) ?></span>
                         <h3><?= e($appointment['center_name']) ?></h3>
-                        <p><?= e(render_datetime($appointment['starts_at'])) ?> · <?= e($appointment['city']) ?>, <?= e($appointment['state']) ?></p>
+                        <p><?= e(renderDatetime($appointment['starts_at'])) ?> · <?= e($appointment['city']) ?>, <?= e($appointment['state']) ?></p>
                     </div>
                     <?php if ($isUpcoming): ?>
                         <div class="appointment-actions">
                             <a class="text-link" href="appointments.php?edit=<?= (int) $appointment['id'] ?>">Edit</a>
                             <form method="post" action="appointments.php" onsubmit="return confirm('Cancel this appointment?');">
-                                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                                <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
                                 <input type="hidden" name="action" value="cancel">
                                 <input type="hidden" name="appointment_id" value="<?= (int) $appointment['id'] ?>">
                                 <button class="link-button" type="submit">Cancel</button>
@@ -209,4 +209,4 @@ render_header('My appointments');
         <?php endif; ?>
     </div>
 </section>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

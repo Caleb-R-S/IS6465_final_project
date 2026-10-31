@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-function render_header(string $title): void
+function renderHeader(string $title): void
 {
-    $user = current_user();
-    $notice = take_flash();
+    $user = currentUser();
+    $notice = takeFlash();
     ?>
 <!doctype html>
 <html lang="en">
@@ -39,7 +39,7 @@ function render_header(string $title): void
             <?php else: ?>
                 <span class="nav-user"><?= e($user['email']) ?></span>
                 <form class="inline-form" action="logout.php" method="post">
-                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
                     <button class="nav-button" type="submit">Sign out</button>
                 </form>
             <?php endif; ?>
@@ -53,7 +53,7 @@ function render_header(string $title): void
     <?php
 }
 
-function render_footer(): void
+function renderFooter(): void
 {
     ?>
 </main>

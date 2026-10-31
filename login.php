@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
-if (current_user() !== null) {
+if (currentUser() !== null) {
     redirect('index.php');
 }
 
@@ -13,7 +13,7 @@ $error = '';
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verify_csrf();
+    verifyCsrf();
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = 'The email or password was not recognized.';
 }
 
-render_header('Sign in');
+renderHeader('Sign in');
 ?>
 <section class="auth-layout">
     <div class="auth-art">
@@ -44,7 +44,7 @@ render_header('Sign in');
         <h2>Sign in</h2>
         <?php if ($error !== ''): ?><div class="notice notice-error" role="alert"><?= e($error) ?></div><?php endif; ?>
         <form method="post" action="login.php">
-            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <label>Email address<input name="email" type="email" autocomplete="username" required value="<?= e($email) ?>"></label>
             <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
             <button class="button button-full" type="submit">Sign in</button>
@@ -52,4 +52,4 @@ render_header('Sign in');
         <p class="form-footnote">New to Biomat Donor Services? <a href="register.php">Create an account</a>.</p>
     </div>
 </section>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

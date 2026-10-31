@@ -4,19 +4,6 @@ declare(strict_types=1);
 
 use Biomat\Database;
 
-require_once dirname(__DIR__) . '/app/Database.php';
-
-date_default_timezone_set('UTC');
-
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_set_cookie_params([
-        'httponly' => true,
-        'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-        'samesite' => 'Lax',
-    ]);
-    session_start();
-}
-
 function db(): PDO
 {
     return Database::connection();
@@ -27,7 +14,21 @@ function e(?string $value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-function csrf_token(): string
+function properCaseName(string $value): string
+{
+    $normalized = preg_replace('/\s+/', ' ', trim($value));
+    if (!is_string($normalized)) {
+        throw new RuntimeException('The name could not be normalized.');
+    }
+
+    $lowercase = function_exists('mb_strtolower')
+        ? mb_strtolower($normalized, 'UTF-8')
+        : strtolower($normalized);
+
+    return ucwords($lowercase, " \t\r\n\f\v-'");
+}
+
+function csrfToken(): string
 {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -36,17 +37,17 @@ function csrf_token(): string
     return $_SESSION['csrf_token'];
 }
 
-function verify_csrf(): void
+function verifyCsrf(): void
 {
     $submittedToken = $_POST['csrf_token'] ?? '';
 
-    if (!is_string($submittedToken) || !hash_equals(csrf_token(), $submittedToken)) {
+    if (!is_string($submittedToken) || !hash_equals(csrfToken(), $submittedToken)) {
         http_response_code(400);
         exit('The form expired. Please go back, reload the page, and try again.');
     }
 }
 
-function current_user(): ?array
+function currentUser(): ?array
 {
     static $loaded = false;
     static $user = null;
@@ -63,9 +64,15 @@ function current_user(): ?array
     }
 
     $statement = db()->prepare(
-        'SELECT users.id, users.email, users.role, donors.id AS donor_id
+        'SELECT users.id, users.email, users.role, donors.id AS donor_id,
+                COALESCE(
+                    NULLIF(TRIM(donors.first_name || " " || donors.last_name), ""),
+                    NULLIF(TRIM(medical_personnel.first_name || " " || medical_personnel.last_name), ""),
+                    users.email
+                ) AS display_name
          FROM users
          LEFT JOIN donors ON donors.user_id = users.id
+         LEFT JOIN medical_personnel ON medical_personnel.user_id = users.id
          WHERE users.id = :id'
     );
     $statement->execute(['id' => $userId]);
@@ -78,9 +85,9 @@ function current_user(): ?array
     return $user;
 }
 
-function require_login(array $roles = []): array
+function requireLogin(array $roles = []): array
 {
-    $user = current_user();
+    $user = currentUser();
 
     if ($user === null) {
         flash('error', 'Please sign in to continue.');
@@ -100,7 +107,7 @@ function flash(string $type, string $message): void
     $_SESSION['flash'] = ['type' => $type, 'message' => $message];
 }
 
-function take_flash(): ?array
+function takeFlash(): ?array
 {
     $message = $_SESSION['flash'] ?? null;
     unset($_SESSION['flash']);
@@ -114,12 +121,12 @@ function redirect(string $path): void
     exit;
 }
 
-function blood_types(): array
+function bloodTypes(): array
 {
     return ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 }
 
-function ssn_hmac(string $digits): string
+function ssnHmac(string $digits): string
 {
     $key = getenv('BIOMAT_SSN_HMAC_KEY');
 
@@ -157,7 +164,7 @@ function ssn_hmac(string $digits): string
     return hash_hmac('sha256', $digits, $key);
 }
 
-function render_datetime(?string $value): string
+function renderDatetime(?string $value): string
 {
     if ($value === null || $value === '') {
         return '—';

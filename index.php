@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
 $centerCount = (int) db()->query('SELECT COUNT(*) FROM donation_centers WHERE active = 1')->fetchColumn();
-render_header('Donor services');
+renderHeader('Donor services');
 ?>
 <section class="hero">
     <div class="hero-copy">
@@ -17,10 +17,10 @@ render_header('Donor services');
             information together in one place.
         </p>
         <div class="button-row">
-            <?php if (current_user() === null): ?>
+            <?php if (currentUser() === null): ?>
                 <a class="button" href="register.php">Create a donor account</a>
                 <a class="button button-outline" href="centers.php">Explore centers</a>
-            <?php elseif (current_user()['role'] === 'donor'): ?>
+            <?php elseif (currentUser()['role'] === 'donor'): ?>
                 <a class="button" href="appointments.php">Manage appointments</a>
                 <a class="button button-outline" href="account.php">View my account</a>
             <?php else: ?>
@@ -56,13 +56,13 @@ render_header('Donor services');
             <span class="feature-number">02</span>
             <h3>Plan a visit</h3>
             <p>Request, review, reschedule, or cancel an upcoming appointment.</p>
-            <a class="text-link" href="<?= current_user() === null ? 'login.php' : 'appointments.php' ?>">Manage appointments <span aria-hidden="true">→</span></a>
+            <a class="text-link" href="<?= currentUser() === null ? 'login.php' : 'appointments.php' ?>">Manage appointments <span aria-hidden="true">→</span></a>
         </article>
         <article class="feature-card">
             <span class="feature-number">03</span>
             <h3>Keep details current</h3>
             <p>Update your contact details and review your donor profile when needed.</p>
-            <a class="text-link" href="<?= current_user() === null ? 'register.php' : 'account.php' ?>">Visit your account <span aria-hidden="true">→</span></a>
+            <a class="text-link" href="<?= currentUser() === null ? 'register.php' : 'account.php' ?>">Visit your account <span aria-hidden="true">→</span></a>
         </article>
     </div>
 </section>
@@ -70,4 +70,4 @@ render_header('Donor services');
     <strong>Course project demo</strong>
     <span>Center details and activity in this site are sample data—not a real appointment or payment service.</span>
 </aside>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

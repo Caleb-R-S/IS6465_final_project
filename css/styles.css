@@ -18,10 +18,21 @@
 
 body {
     margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     color: var(--ink);
     background: var(--paper);
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     line-height: 1.6;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.mt-auto {
+    margin-top: auto;
 }
 
 a {
@@ -275,12 +286,42 @@ summary:focus-visible {
 
 .hero-art {
     position: relative;
+    z-index: 1;
     min-height: 365px;
     display: grid;
     place-items: center;
-    overflow: hidden;
+    overflow: visible;
     background: #eaf1e9;
     border-radius: 48% 52% 43% 57% / 49% 44% 56% 51%;
+}
+
+.hero-art::before {
+    position: absolute;
+    z-index: -1;
+    inset: -3rem;
+    content: "";
+}
+
+.hero-art:hover .drop-shape {
+    transform: rotate(45deg) scale(1.06);
+}
+
+.hero-art:hover .orbit-one::before {
+    animation-name: orbit-one-hover;
+    animation-duration: 850ms;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    transform: scale(1.12);
+}
+
+.hero-art:hover .orbit-two::before {
+    animation-name: orbit-two-hover;
+    animation-duration: 1.1s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    transform: scale(1.12);
 }
 
 .drop-shape {
@@ -294,6 +335,8 @@ summary:focus-visible {
     border-radius: 50% 50% 48% 48% / 64% 64% 36% 36%;
     box-shadow: 0 20px 50px rgba(32, 90, 65, 0.25);
     transform: rotate(45deg);
+    transform-origin: center;
+    transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .drop-shape span {
@@ -307,16 +350,93 @@ summary:focus-visible {
 
 .orbit {
     position: absolute;
-    width: 325px;
-    height: 325px;
-    border: 1px solid rgba(36, 92, 69, 0.22);
+    width: 365px;
+    height: 285px;
     border-radius: 50%;
+    animation: orbit-one-drift 28s linear infinite;
+    transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.orbit::before {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--green-dark);
+    border-radius: inherit;
+    content: "";
+    transform: scale(1);
+    transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .orbit-two {
     width: 410px;
     height: 220px;
     transform: rotate(-31deg);
+    animation-name: orbit-two-drift;
+    animation-duration: 38s;
+}
+
+@keyframes orbit-one-drift {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes orbit-two-drift {
+    from {
+        transform: rotate(-31deg);
+    }
+
+    to {
+        transform: rotate(-391deg);
+    }
+}
+
+@keyframes orbit-one-hover {
+    0% {
+        rotate: 0deg;
+    }
+
+    100% {
+        rotate: 360deg;
+    }
+}
+
+@keyframes orbit-two-hover {
+    0% {
+        rotate: 0deg;
+    }
+
+    100% {
+        rotate: -360deg;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .orbit {
+        animation: none;
+    }
+
+    .hero-art:hover .orbit-one::before,
+    .hero-art:hover .orbit-two::before {
+        animation: none;
+    }
+
+    .hero-art:hover .drop-shape {
+        transform: rotate(45deg);
+    }
+
+    .orbit::before {
+        transition: none;
+    }
+
+    .hero-art:hover .orbit-one::before,
+    .hero-art:hover .orbit-two::before {
+        transform: scale(1);
+    }
 }
 
 .art-caption {

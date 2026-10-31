@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-function render_header(string $title): void
+function renderHeader(string $title): void
 {
-    $user = current_user();
-    $notice = take_flash();
+    $user = currentUser();
+    $notice = takeFlash();
     ?>
 <!doctype html>
 <html lang="en">
@@ -37,9 +37,9 @@ function render_header(string $title): void
                 <a href="login.php">Sign in</a>
                 <a class="button button-small" href="register.php">Create account</a>
             <?php else: ?>
-                <span class="nav-user"><?= e($user['email']) ?></span>
+                <span class="nav-user">Welcome, <?= e($user['display_name']) ?></span>
                 <form class="inline-form" action="logout.php" method="post">
-                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                     <button class="nav-button" type="submit">Sign out</button>
                 </form>
             <?php endif; ?>
@@ -53,11 +53,11 @@ function render_header(string $title): void
     <?php
 }
 
-function render_footer(): void
+function renderFooter(): void
 {
     ?>
 </main>
-<footer class="site-footer">
+<footer class="site-footer mt-auto">
     <div class="footer-inner">
         <span>Biomat Donor Services</span>
         <span>Student project demonstration · Do not enter real personal or health information.</span>

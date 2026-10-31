@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
 $centers = db()->query(
@@ -12,7 +12,7 @@ $centers = db()->query(
      ORDER BY state, city, name'
 )->fetchAll();
 
-render_header('Donation centers');
+renderHeader('Donation centers');
 ?>
 <section class="page-heading">
     <p class="eyebrow">Locations</p>
@@ -32,10 +32,10 @@ render_header('Donation centers');
             <a class="text-link" href="tel:<?= e(preg_replace('/[^0-9+]/', '', $center['phone'])) ?>">
                 <?= e($center['phone']) ?>
             </a>
-            <?php if (current_user() !== null && current_user()['role'] === 'donor'): ?>
+            <?php if (currentUser() !== null && currentUser()['role'] === 'donor'): ?>
                 <a class="button button-outline button-full" href="appointments.php?center_id=<?= (int) $center['id'] ?>">Request a visit</a>
             <?php endif; ?>
         </article>
     <?php endforeach; ?>
 </section>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

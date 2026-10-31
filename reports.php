@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
-require_login(['personnel', 'admin']);
+requireLogin(['personnel', 'admin']);
 $database = db();
 $donorCount = (int) $database->query('SELECT COUNT(*) FROM donors')->fetchColumn();
 $weekStatement = $database->query(
@@ -46,7 +46,7 @@ $donorReport = $database->query(
      LIMIT 100'
 )->fetchAll();
 
-render_header('Reports');
+renderHeader('Reports');
 ?>
 <section class="page-heading">
     <p class="eyebrow">Operations overview</p>
@@ -99,4 +99,4 @@ render_header('Reports');
         </tbody>
     </table></div>
 </section>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

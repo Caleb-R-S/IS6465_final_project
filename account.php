@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
-$user = require_login(['donor']);
+$user = requireLogin(['donor']);
 $statement = db()->prepare('SELECT * FROM donors WHERE user_id = :user_id');
 $statement->execute(['user_id' => $user['id']]);
 $donor = $statement->fetch();
@@ -18,7 +18,7 @@ if ($donor === false) {
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    verify_csrf();
+    verifyCsrf();
     $action = (string) ($_POST['action'] ?? 'update');
 
     if ($action === 'delete') {
@@ -61,6 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($fields as $field) {
             $values[$field] = trim((string) ($_POST[$field] ?? ''));
         }
+        $values['first_name'] = properCaseName($values['first_name']);
+        $values['last_name'] = properCaseName($values['last_name']);
+        $values['emergency_contact_name'] = properCaseName($values['emergency_contact_name']);
 
         if (in_array('', array_intersect_key($values, array_flip([
             'first_name', 'last_name', 'phone', 'email', 'address_line', 'city', 'state', 'postal_code',
@@ -70,10 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!filter_var($values['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Enter a valid email address.';
         }
-        if ($values['emergency_contact_email'] !== '' && !filter_var($values['emergency_contact_email'], FILTER_VALIDATE_EMAIL)) {
+        if (
+            $values['emergency_contact_email'] !== ''
+            && !filter_var($values['emergency_contact_email'], FILTER_VALIDATE_EMAIL)
+        ) {
             $errors[] = 'Enter a valid emergency contact email address.';
         }
-        if (!in_array($values['blood_type'], blood_types(), true)) {
+        if (!in_array($values['blood_type'], bloodTypes(), true)) {
             $errors[] = 'Choose a valid blood type.';
         }
         $weight = trim((string) ($_POST['weight_lbs'] ?? ''));
@@ -149,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-render_header('My account');
+renderHeader('My account');
 ?>
 <section class="page-heading">
     <p class="eyebrow">Donor profile</p>
@@ -163,7 +169,7 @@ render_header('My account');
             <div class="notice notice-error" role="alert"><ul><?php foreach ($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul></div>
         <?php endif; ?>
         <form method="post" action="account.php">
-            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="action" value="update">
             <div class="field-grid">
                 <label>First name<input name="first_name" required value="<?= e($donor['first_name']) ?>"></label>
@@ -176,7 +182,7 @@ render_header('My account');
                 <label>Postal code<input name="postal_code" required value="<?= e($donor['postal_code']) ?>"></label>
                 <label>Blood type
                     <select name="blood_type" required>
-                        <?php foreach (blood_types() as $bloodType): ?>
+                        <?php foreach (bloodTypes() as $bloodType): ?>
                             <option value="<?= e($bloodType) ?>" <?= $donor['blood_type'] === $bloodType ? 'selected' : '' ?>><?= e($bloodType) ?></option>
                         <?php endforeach; ?>
                     </select>
@@ -195,11 +201,11 @@ render_header('My account');
         <h2>Delete your account</h2>
         <p>This permanently removes your demo account and its associated appointment and donation records.</p>
         <form method="post" action="account.php" onsubmit="return confirm('Delete your account and its associated demo records?');">
-            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="action" value="delete">
             <label>Confirm with your password<input name="password" type="password" autocomplete="current-password" required></label>
             <button class="button button-danger" type="submit">Delete my account</button>
         </form>
     </aside>
 </section>
-<?php render_footer(); ?>
+<?php renderFooter(); ?>

@@ -14,6 +14,20 @@ function e(?string $value): string
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function properCaseName(string $value): string
+{
+    $normalized = preg_replace('/\s+/', ' ', trim($value));
+    if (!is_string($normalized)) {
+        throw new RuntimeException('The name could not be normalized.');
+    }
+
+    $lowercase = function_exists('mb_strtolower')
+        ? mb_strtolower($normalized, 'UTF-8')
+        : strtolower($normalized);
+
+    return ucwords($lowercase, " \t\r\n\f\v-'");
+}
+
 function csrfToken(): string
 {
     if (empty($_SESSION['csrf_token'])) {
@@ -50,9 +64,15 @@ function currentUser(): ?array
     }
 
     $statement = db()->prepare(
-        'SELECT users.id, users.email, users.role, donors.id AS donor_id
+        'SELECT users.id, users.email, users.role, donors.id AS donor_id,
+                COALESCE(
+                    NULLIF(TRIM(donors.first_name || " " || donors.last_name), ""),
+                    NULLIF(TRIM(medical_personnel.first_name || " " || medical_personnel.last_name), ""),
+                    users.email
+                ) AS display_name
          FROM users
          LEFT JOIN donors ON donors.user_id = users.id
+         LEFT JOIN medical_personnel ON medical_personnel.user_id = users.id
          WHERE users.id = :id'
     );
     $statement->execute(['id' => $userId]);

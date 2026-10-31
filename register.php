@@ -29,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($values as $field => $value) {
         $values[$field] = trim((string) ($_POST[$field] ?? $value));
     }
+    $values['first_name'] = properCaseName($values['first_name']);
+    $values['last_name'] = properCaseName($values['last_name']);
 
     $ssnInput = trim((string) ($_POST['ssn'] ?? ''));
     $ssn = preg_replace('/\D/', '', $ssnInput);

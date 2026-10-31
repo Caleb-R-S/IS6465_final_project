@@ -61,6 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($fields as $field) {
             $values[$field] = trim((string) ($_POST[$field] ?? ''));
         }
+        $values['first_name'] = properCaseName($values['first_name']);
+        $values['last_name'] = properCaseName($values['last_name']);
+        $values['emergency_contact_name'] = properCaseName($values['emergency_contact_name']);
 
         if (in_array('', array_intersect_key($values, array_flip([
             'first_name', 'last_name', 'phone', 'email', 'address_line', 'city', 'state', 'postal_code',

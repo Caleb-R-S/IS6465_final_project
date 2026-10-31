@@ -37,7 +37,7 @@ function renderHeader(string $title): void
                 <a href="login.php">Sign in</a>
                 <a class="button button-small" href="register.php">Create account</a>
             <?php else: ?>
-                <span class="nav-user"><?= e($user['email']) ?></span>
+                <span class="nav-user">Welcome, <?= e($user['display_name']) ?></span>
                 <form class="inline-form" action="logout.php" method="post">
                     <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                     <button class="nav-button" type="submit">Sign out</button>

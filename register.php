@@ -36,7 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bloodType = (string) ($_POST['blood_type'] ?? '');
     $selectedBloodType = $bloodType;
 
-    foreach (['first_name', 'last_name', 'date_of_birth', 'email', 'phone', 'address_line', 'city', 'state', 'postal_code'] as $field) {
+    foreach (
+        ['first_name', 'last_name', 'date_of_birth', 'email', 'phone', 'address_line', 'city', 'state', 'postal_code']
+        as $field
+    ) {
         if ($values[$field] === '') {
             $errors[] = 'Please complete all required profile fields.';
             break;
@@ -144,7 +147,7 @@ renderHeader('Create donor account');
             </div>
         <?php endif; ?>
         <form method="post" action="register.php">
-            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <div class="field-grid">
                 <label>First name<input name="first_name" autocomplete="given-name" required value="<?= e($values['first_name']) ?>"></label>
                 <label>Last name<input name="last_name" autocomplete="family-name" required value="<?= e($values['last_name']) ?>"></label>

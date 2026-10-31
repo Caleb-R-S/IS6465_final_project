@@ -25,7 +25,7 @@ $definitions = [
             ['emergency_contact_name', 'Emergency contact', 'text', false],
             ['emergency_contact_phone', 'Emergency contact phone', 'text', false],
             ['emergency_contact_email', 'Emergency contact email', 'email', false],
-            ['blood_type', 'Blood type', 'bloodTypes', true],
+            ['blood_type', 'Blood type', 'blood_types', true],
             ['weight_lbs', 'Weight (lb)', 'number', false],
             ['height_inches', 'Height (in)', 'number', false],
         ],
@@ -49,7 +49,7 @@ $definitions = [
             ['center_id', 'Donation center', 'centers', true],
             ['doctor_id', 'Doctor', 'doctors', false],
             ['nurse_id', 'Nurse', 'nurses', false],
-            ['blood_type', 'Blood type', 'bloodTypes', true],
+            ['blood_type', 'Blood type', 'blood_types', true],
             ['amount_ml', 'Amount (mL)', 'number', true],
             ['donated_at', 'Donation date and time (UTC)', 'datetime-local', true],
         ],
@@ -152,7 +152,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($rawValue === '') {
                 if ($required && !($action === 'update' && $isOptionalSecret)) {
                     $errors[] = $label . ' is required.';
-                } elseif ($type === 'number' || $type === 'integer' || in_array($type, ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'], true)) {
+                } elseif (
+                    $type === 'number'
+                    || $type === 'integer'
+                    || in_array(
+                        $type,
+                        ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'],
+                        true
+                    )
+                ) {
                     $data[$name] = null;
                 }
                 continue;
@@ -227,7 +235,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $data[$name] = $type === 'integer' ? (int) $rawValue : (float) $rawValue;
                 continue;
             }
-            if (in_array($type, ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'], true)) {
+            if (
+                in_array(
+                    $type,
+                    ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'],
+                    true
+                )
+            ) {
                 if (filter_var($rawValue, FILTER_VALIDATE_INT) === false || (int) $rawValue < 1) {
                     $errors[] = 'Choose a valid option for ' . strtolower($label) . '.';
                     continue;
@@ -237,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $options = [
-                'bloodTypes' => bloodTypes(),
+                'blood_types' => bloodTypes(),
                 'personnel_types' => ['doctor', 'nurse', 'staff'],
                 'appointment_statuses' => ['booked', 'cancelled', 'completed'],
                 'roles' => ['donor', 'personnel', 'admin'],
@@ -256,7 +270,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($currentRoleStatement->fetchColumn() === 'admin') {
                     $adminCount = (int) db()->query('SELECT COUNT(*) FROM users WHERE role = "admin"')->fetchColumn();
                     if ($recordId === (int) $user['id'] || $adminCount <= 1) {
-                        throw new InvalidArgumentException('You cannot remove the last administrator or change your own administrator role.');
+                        throw new InvalidArgumentException(
+                            'You cannot remove the last administrator or change your own administrator role.'
+                        );
                     }
                 }
             }
@@ -302,11 +318,16 @@ function staffOptions(string $type): array
     $queries = [
         'donor_users' => 'SELECT id, email AS label FROM users WHERE role = "donor" ORDER BY email',
         'staff_users' => 'SELECT id, email AS label FROM users WHERE role = "personnel" ORDER BY email',
-        'donors' => 'SELECT id, first_name || " " || last_name || " · " || email AS label FROM donors ORDER BY last_name, first_name',
-        'centers' => 'SELECT id, name || " · " || city AS label FROM donation_centers WHERE active = 1 ORDER BY city, name',
-        'doctors' => 'SELECT id, first_name || " " || last_name AS label FROM medical_personnel WHERE personnel_type = "doctor" ORDER BY last_name, first_name',
-        'nurses' => 'SELECT id, first_name || " " || last_name AS label FROM medical_personnel WHERE personnel_type = "nurse" ORDER BY last_name, first_name',
-        'donations' => 'SELECT id, "Donation #" || id || " · " || donated_at AS label FROM donations ORDER BY donated_at DESC',
+        'donors' => 'SELECT id, first_name || " " || last_name || " · " || email AS label
+            FROM donors ORDER BY last_name, first_name',
+        'centers' => 'SELECT id, name || " · " || city AS label
+            FROM donation_centers WHERE active = 1 ORDER BY city, name',
+        'doctors' => 'SELECT id, first_name || " " || last_name AS label
+            FROM medical_personnel WHERE personnel_type = "doctor" ORDER BY last_name, first_name',
+        'nurses' => 'SELECT id, first_name || " " || last_name AS label
+            FROM medical_personnel WHERE personnel_type = "nurse" ORDER BY last_name, first_name',
+        'donations' => 'SELECT id, "Donation #" || id || " · " || donated_at AS label
+            FROM donations ORDER BY donated_at DESC',
         'donations_without_compensation' => 'SELECT donations.id, "Donation #" || donations.id || " · " || donors.first_name || " " || donors.last_name AS label
             FROM donations JOIN donors ON donors.id = donations.donor_id
             LEFT JOIN compensations ON compensations.donation_id = donations.id
@@ -364,14 +385,14 @@ renderHeader('Staff workspace');
         <p class="eyebrow">New record</p>
         <h2>Add <?= e(strtolower(rtrim($definition['title'], 's'))) ?></h2>
         <form method="post" action="staff.php?entity=<?= e($entity) ?>">
-            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="entity" value="<?= e($entity) ?>">
             <input type="hidden" name="action" value="create">
             <?php foreach ($definition['fields'] as $field): ?>
                 <?php
                 [$name, $label, $type, $required] = $field;
                 $required = $required && $type !== 'ssn';
-                if ($type === 'bloodTypes') {
+                if ($type === 'blood_types') {
                     $choices = array_map(static function (string $value): array {
                         return ['id' => $value, 'label' => $value];
                     }, bloodTypes());
@@ -387,14 +408,20 @@ renderHeader('Staff workspace');
                     $choices = array_map(static function (string $value): array {
                         return ['id' => $value, 'label' => ucfirst($value)];
                     }, ['donor', 'personnel', 'admin']);
-                } elseif (in_array($type, ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'], true)) {
+                } elseif (
+                    in_array(
+                        $type,
+                        ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'],
+                        true
+                    )
+                ) {
                     $choices = staffOptions($type);
                 } else {
                     $choices = [];
                 }
                 ?>
                 <label><?= e($label) ?>
-                    <?php if ($choices !== [] || in_array($type, ['bloodTypes', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
+                    <?php if ($choices !== [] || in_array($type, ['blood_types', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
                         <select name="<?= e($name) ?>" <?= $required ? 'required' : '' ?>>
                             <?php if (!$required): ?><option value="">Not assigned</option><?php endif; ?>
                             <?php foreach ($choices as $choice): ?>
@@ -449,7 +476,7 @@ renderHeader('Staff workspace');
                     <span class="record-id">#<?= (int) $record['id'] ?> · Edit</span>
                 </summary>
                 <form method="post" action="staff.php?entity=<?= e($entity) ?>" class="record-edit-form">
-                    <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                     <input type="hidden" name="entity" value="<?= e($entity) ?>">
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="record_id" value="<?= (int) $record['id'] ?>">
@@ -457,7 +484,7 @@ renderHeader('Staff workspace');
                         <?php foreach ($definition['fields'] as $field): ?>
                             <?php
                             [$name, $label, $type, $required] = $field;
-                            if ($type === 'bloodTypes') {
+                            if ($type === 'blood_types') {
                                 $choices = array_map(static function (string $value): array {
                                     return ['id' => $value, 'label' => $value];
                                 }, bloodTypes());
@@ -473,7 +500,13 @@ renderHeader('Staff workspace');
                                 $choices = array_map(static function (string $value): array {
                                     return ['id' => $value, 'label' => ucfirst($value)];
                                 }, ['donor', 'personnel', 'admin']);
-                            } elseif (in_array($type, ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'], true)) {
+                            } elseif (
+                                in_array(
+                                    $type,
+                                    ['donor_users', 'staff_users', 'donors', 'centers', 'doctors', 'nurses', 'donations', 'donations_without_compensation'],
+                                    true
+                                )
+                            ) {
                                 $choices = staffOptions($type);
                             } else {
                                 $choices = [];
@@ -481,7 +514,7 @@ renderHeader('Staff workspace');
                             $optional = in_array($type, ['ssn', 'password'], true) || !$required;
                             ?>
                             <label><?= e($label) ?>
-                                <?php if ($choices !== [] || in_array($type, ['bloodTypes', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
+                                <?php if ($choices !== [] || in_array($type, ['blood_types', 'personnel_types', 'appointment_statuses', 'roles'], true)): ?>
                                     <select name="<?= e($name) ?>" <?= $required ? 'required' : '' ?>>
                                         <?php if ($optional): ?><option value="">Not assigned</option><?php endif; ?>
                                         <?php foreach ($choices as $choice): ?>
@@ -509,7 +542,7 @@ renderHeader('Staff workspace');
                     </div>
                 </form>
                 <form method="post" action="staff.php?entity=<?= e($entity) ?>" class="delete-form" onsubmit="return confirm('Delete this record? Related records may also be removed.');">
-                    <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                     <input type="hidden" name="entity" value="<?= e($entity) ?>">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="record_id" value="<?= (int) $record['id'] ?>">

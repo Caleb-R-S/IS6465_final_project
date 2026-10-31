@@ -119,7 +119,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($errors === []) {
-                flash('success', $editingAppointment === null ? 'Your appointment request has been saved.' : 'Your appointment has been updated.');
+                flash(
+                    'success',
+                    $editingAppointment === null
+                        ? 'Your appointment request has been saved.'
+                        : 'Your appointment has been updated.'
+                );
                 redirect('appointments.php');
             }
         }
@@ -155,7 +160,7 @@ renderHeader('My appointments');
             <div class="notice notice-error" role="alert"><ul><?php foreach ($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul></div>
         <?php endif; ?>
         <form method="post" action="<?= $editingAppointment === null ? 'appointments.php' : 'appointments.php?edit=' . (int) $editingAppointment['id'] ?>">
-            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="action" value="save">
             <label>Donation center
                 <select name="center_id" required>
@@ -197,7 +202,7 @@ renderHeader('My appointments');
                         <div class="appointment-actions">
                             <a class="text-link" href="appointments.php?edit=<?= (int) $appointment['id'] ?>">Edit</a>
                             <form method="post" action="appointments.php" onsubmit="return confirm('Cancel this appointment?');">
-                                <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+                                <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                                 <input type="hidden" name="action" value="cancel">
                                 <input type="hidden" name="appointment_id" value="<?= (int) $appointment['id'] ?>">
                                 <button class="link-button" type="submit">Cancel</button>

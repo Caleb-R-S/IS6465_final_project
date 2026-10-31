@@ -70,7 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!filter_var($values['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Enter a valid email address.';
         }
-        if ($values['emergency_contact_email'] !== '' && !filter_var($values['emergency_contact_email'], FILTER_VALIDATE_EMAIL)) {
+        if (
+            $values['emergency_contact_email'] !== ''
+            && !filter_var($values['emergency_contact_email'], FILTER_VALIDATE_EMAIL)
+        ) {
             $errors[] = 'Enter a valid emergency contact email address.';
         }
         if (!in_array($values['blood_type'], bloodTypes(), true)) {
@@ -163,7 +166,7 @@ renderHeader('My account');
             <div class="notice notice-error" role="alert"><ul><?php foreach ($errors as $error): ?><li><?= e($error) ?></li><?php endforeach; ?></ul></div>
         <?php endif; ?>
         <form method="post" action="account.php">
-            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="action" value="update">
             <div class="field-grid">
                 <label>First name<input name="first_name" required value="<?= e($donor['first_name']) ?>"></label>
@@ -195,7 +198,7 @@ renderHeader('My account');
         <h2>Delete your account</h2>
         <p>This permanently removes your demo account and its associated appointment and donation records.</p>
         <form method="post" action="account.php" onsubmit="return confirm('Delete your account and its associated demo records?');">
-            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <input type="hidden" name="action" value="delete">
             <label>Confirm with your password<input name="password" type="password" autocomplete="current-password" required></label>
             <button class="button button-danger" type="submit">Delete my account</button>

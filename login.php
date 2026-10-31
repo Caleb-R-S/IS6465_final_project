@@ -44,7 +44,7 @@ renderHeader('Sign in');
         <h2>Sign in</h2>
         <?php if ($error !== ''): ?><div class="notice notice-error" role="alert"><?= e($error) ?></div><?php endif; ?>
         <form method="post" action="login.php">
-            <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
             <label>Email address<input name="email" type="email" autocomplete="username" required value="<?= e($email) ?>"></label>
             <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
             <button class="button button-full" type="submit">Sign in</button>

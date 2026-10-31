@@ -39,7 +39,7 @@ function renderHeader(string $title): void
             <?php else: ?>
                 <span class="nav-user"><?= e($user['email']) ?></span>
                 <form class="inline-form" action="logout.php" method="post">
-                    <input type="hidden" name="csrfToken" value="<?= e(csrfToken()) ?>">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrfToken()) ?>">
                     <button class="nav-button" type="submit">Sign out</button>
                 </form>
             <?php endif; ?>

@@ -16,16 +16,16 @@ function e(?string $value): string
 
 function csrfToken(): string
 {
-    if (empty($_SESSION['csrfToken'])) {
-        $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
 
-    return $_SESSION['csrfToken'];
+    return $_SESSION['csrf_token'];
 }
 
 function verifyCsrf(): void
 {
-    $submittedToken = $_POST['csrfToken'] ?? '';
+    $submittedToken = $_POST['csrf_token'] ?? '';
 
     if (!is_string($submittedToken) || !hash_equals(csrfToken(), $submittedToken)) {
         http_response_code(400);

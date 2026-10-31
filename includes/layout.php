@@ -57,7 +57,7 @@ function render_footer(): void
 {
     ?>
 </main>
-<footer class="site-footer">
+<footer class="site-footer mt-auto">
     <div class="footer-inner">
         <span>Biomat Donor Services</span>
         <span>Student project demonstration · Do not enter real personal or health information.</span>

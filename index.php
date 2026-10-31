@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/runtime.php';
 require_once __DIR__ . '/includes/layout.php';
 
 $centerCount = (int) db()->query('SELECT COUNT(*) FROM donation_centers WHERE active = 1')->fetchColumn();

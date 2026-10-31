@@ -4,19 +4,6 @@ declare(strict_types=1);
 
 use Biomat\Database;
 
-require_once dirname(__DIR__) . '/app/Database.php';
-
-date_default_timezone_set('UTC');
-
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_set_cookie_params([
-        'httponly' => true,
-        'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-        'samesite' => 'Lax',
-    ]);
-    session_start();
-}
-
 function db(): PDO
 {
     return Database::connection();

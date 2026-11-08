@@ -115,7 +115,6 @@
       min-block-size: 100vh;
     }
 
-    /* Accessibility focus styles */
     :focus-visible {
       outline: 3px solid var(--border-focus);
       outline-offset: 2px;
@@ -155,7 +154,7 @@
     .site-header {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-color);
-      padding-block: 1rem;
+      padding-block: 0.9rem;
       padding-inline: 1.5rem;
       position: sticky;
       top: 0;
@@ -180,8 +179,8 @@
     }
 
     .brand-logo {
-      inline-size: 42px;
-      block-size: 42px;
+      inline-size: 38px;
+      block-size: 38px;
       border-radius: var(--radius-md);
       background: linear-gradient(135deg, #194733, #2f7a5b);
       color: #ffffff;
@@ -189,14 +188,14 @@
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       box-shadow: var(--shadow-sm);
       user-select: none;
     }
 
     .brand-text h1 {
       margin: 0;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 700;
       line-height: 1.2;
       letter-spacing: -0.02em;
@@ -204,7 +203,7 @@
 
     .brand-text p {
       margin: 0;
-      font-size: 0.825rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
 
@@ -219,10 +218,10 @@
       align-items: center;
       justify-content: center;
       gap: 0.45rem;
-      padding-block: 0.5rem;
-      padding-inline: 0.9rem;
+      padding-block: 0.45rem;
+      padding-inline: 0.85rem;
       border-radius: var(--radius-sm);
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid transparent;
@@ -256,19 +255,19 @@
     }
 
     .btn-icon {
-      padding: 0.5rem;
-      inline-size: 38px;
-      block-size: 38px;
+      padding: 0.45rem;
+      inline-size: 36px;
+      block-size: 36px;
       border-radius: var(--radius-sm);
     }
 
-    /* Sub-header / Meta banner */
+    /* Sub-header / Team Banner */
     .project-banner {
       background: var(--bg-surface-alt);
       border-bottom: 1px solid var(--border-color);
-      padding-block: 0.65rem;
+      padding-block: 0.5rem;
       padding-inline: 1.5rem;
-      font-size: 0.85rem;
+      font-size: 0.825rem;
       color: var(--text-muted);
     }
 
@@ -285,7 +284,7 @@
     .team-credits {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
     }
 
@@ -294,34 +293,13 @@
       color: var(--text-main);
     }
 
-    .stats-summary {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .stat-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      padding-block: 0.15rem;
-      padding-inline: 0.6rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      color: var(--text-main);
-      font-size: 0.775rem;
-    }
-
     /* App container */
     .app-main {
       flex: 1 0 auto;
       max-inline-size: 1440px;
       inline-size: 100%;
       margin-inline: auto;
-      padding-block: 1.5rem;
+      padding-block: 1.25rem;
       padding-inline: 1.5rem;
     }
 
@@ -330,18 +308,18 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1rem 1.25rem;
+      padding: 0.9rem 1.15rem;
       box-shadow: var(--shadow-sm);
-      margin-block-end: 1.5rem;
+      margin-block-end: 1.25rem;
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
+      gap: 0.75rem;
     }
 
     .search-row {
       display: flex;
       align-items: safe center;
-      gap: 0.85rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
@@ -359,22 +337,22 @@
 
     .search-icon {
       position: absolute;
-      left: 0.85rem;
-      inline-size: 18px;
-      block-size: 18px;
+      left: 0.8rem;
+      inline-size: 16px;
+      block-size: 16px;
       color: var(--text-subtle);
       pointer-events: none;
     }
 
     .search-input {
       inline-size: 100%;
-      padding-block: 0.6rem;
-      padding-inline: 2.5rem 2rem;
+      padding-block: 0.55rem;
+      padding-inline: 2.3rem 2rem;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-color);
       background-color: var(--bg-surface-alt);
       color: var(--text-main);
-      font-size: 0.9rem;
+      font-size: 0.875rem;
       transition: border-color var(--transition), background-color var(--transition);
     }
 
@@ -410,22 +388,22 @@
       background: var(--bg-surface-alt);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 0.25rem;
+      padding: 0.2rem;
     }
 
     .view-btn {
       background: none;
       border: none;
-      padding-block: 0.4rem;
-      padding-inline: 0.75rem;
-      font-size: 0.825rem;
+      padding-block: 0.35rem;
+      padding-inline: 0.7rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-muted);
       border-radius: var(--radius-sm);
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
       transition: all var(--transition);
     }
 
@@ -438,27 +416,27 @@
     .filter-pills-row {
       display: flex;
       align-items: safe center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
     }
 
     .filter-label {
-      font-size: 0.775rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: 700;
       color: var(--text-subtle);
-      margin-inline-end: 0.25rem;
+      margin-inline-end: 0.2rem;
     }
 
     .filter-pill {
       background: var(--bg-surface-alt);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      padding-block: 0.25rem;
-      padding-inline: 0.75rem;
+      padding-block: 0.2rem;
+      padding-inline: 0.65rem;
       border-radius: 9999px;
-      font-size: 0.8rem;
+      font-size: 0.775rem;
       font-weight: 500;
       cursor: pointer;
       transition: all var(--transition);
@@ -480,7 +458,7 @@
     .explorer-split {
       display: grid;
       grid-template-columns: 340px 1fr;
-      gap: 1.5rem;
+      gap: 1.25rem;
       align-items: start;
     }
 
@@ -500,12 +478,12 @@
       flex-direction: column;
       overflow: hidden;
       position: sticky;
-      top: 5.5rem;
-      max-block-size: calc(100vh - 7rem);
+      top: 5rem;
+      max-block-size: calc(100vh - 6.5rem);
     }
 
     .sidebar-header {
-      padding: 0.85rem 1rem;
+      padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
@@ -515,7 +493,7 @@
 
     .sidebar-header h2 {
       margin: 0;
-      font-size: 0.875rem;
+      font-size: 0.825rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -523,31 +501,32 @@
     }
 
     .doc-count-tag {
-      font-size: 0.75rem;
+      font-size: 0.725rem;
       font-weight: 600;
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       padding: 0.1rem 0.5rem;
       border-radius: 9999px;
+      color: var(--text-muted);
     }
 
     .doc-list-scroll {
       overflow-y: auto;
       scrollbar-gutter: stable;
       overscroll-behavior: contain;
-      padding: 0.6rem;
+      padding: 0.5rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
 
     .category-group-title {
-      font-size: 0.725rem;
+      font-size: 0.7rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-subtle);
-      padding: 0.5rem 0.6rem 0.2rem;
+      padding: 0.45rem 0.5rem 0.15rem;
     }
 
     .doc-item-btn {
@@ -556,11 +535,11 @@
       background: none;
       border: 1px solid transparent;
       border-radius: var(--radius-md);
-      padding: 0.7rem 0.75rem;
+      padding: 0.6rem 0.7rem;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.3rem;
       transition: background-color var(--transition), border-color var(--transition);
       min-inline-size: 0;
     }
@@ -586,9 +565,9 @@
       display: inline-flex;
       align-items: center;
       gap: 0.25rem;
-      font-size: 0.7rem;
+      font-size: 0.675rem;
       font-weight: 700;
-      padding: 0.15rem 0.5rem;
+      padding: 0.12rem 0.45rem;
       border-radius: 4px;
       letter-spacing: 0.02em;
       text-transform: uppercase;
@@ -611,29 +590,44 @@
       color: var(--badge-wireframe-text);
     }
 
-    .doc-page-count {
-      font-size: 0.725rem;
-      color: var(--text-subtle);
-      font-weight: 500;
-    }
-
     .doc-item-title {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-main);
-      line-height: 1.35;
+      line-height: 1.3;
       min-inline-size: 0;
       word-break: break-word;
     }
 
-    .doc-item-desc {
-      font-size: 0.75rem;
+    .doc-item-filename {
+      font-family: var(--font-mono);
+      font-size: 0.725rem;
+      color: var(--primary);
+      word-break: break-all;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-block-start: 0.15rem;
+    }
+
+    .tag-pill {
+      font-size: 0.675rem;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
       color: var(--text-muted);
-      line-height: 1.35;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      padding-block: 0.05rem;
+      padding-inline: 0.4rem;
+      border-radius: 4px;
+      line-height: 1.3;
+    }
+
+    .doc-item-btn.active .tag-pill {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border-color: var(--border-color);
     }
 
     /* Main Viewer Panel */
@@ -649,7 +643,7 @@
     }
 
     .viewer-toolbar {
-      padding: 0.9rem 1.25rem;
+      padding: 0.85rem 1.15rem;
       border-bottom: 1px solid var(--border-color);
       background: var(--bg-surface);
       display: flex;
@@ -665,17 +659,17 @@
     }
 
     .viewer-breadcrumb {
-      font-size: 0.75rem;
+      font-size: 0.725rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--primary);
-      margin-block-end: 0.2rem;
+      margin-block-end: 0.15rem;
     }
 
     .viewer-title {
       margin: 0;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--text-main);
       line-height: 1.25;
@@ -685,29 +679,28 @@
     .viewer-actions {
       display: flex;
       align-items: safe center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       flex-wrap: wrap;
     }
 
     .viewer-info-strip {
       background: var(--bg-surface-alt);
       border-bottom: 1px solid var(--border-color);
-      padding: 0.75rem 1.25rem;
-      font-size: 0.85rem;
+      padding: 0.6rem 1.15rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
     .viewer-meta-tags {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
-      font-size: 0.8rem;
     }
 
     .viewer-meta-item {
@@ -717,18 +710,30 @@
       color: var(--text-muted);
     }
 
+    .viewer-filename-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding-block: 0.15rem;
+      padding-inline: 0.45rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      word-break: break-all;
+    }
+
     /* Embedded PDF frame */
     .pdf-frame-container {
       position: relative;
       background: #3f4744;
       inline-size: 100%;
-      block-size: 780px;
+      block-size: 800px;
       min-block-size: 550px;
     }
 
     @media (max-height: 900px) {
       .pdf-frame-container {
-        block-size: 70vh;
+        block-size: 72vh;
       }
     }
 
@@ -740,9 +745,9 @@
       background: var(--bg-surface);
     }
 
-    /* Fallback banner for browsers/mobiles that do not display PDF inline */
+    /* Fallback banner */
     .viewer-fallback-banner {
-      padding: 0.85rem 1.25rem;
+      padding: 0.75rem 1.15rem;
       background: var(--bg-surface-alt);
       border-top: 1px solid var(--border-color);
       display: flex;
@@ -750,7 +755,7 @@
       justify-content: space-between;
       gap: 1rem;
       flex-wrap: wrap;
-      font-size: 0.825rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
 
@@ -761,19 +766,19 @@
     /* Grid View Gallery */
     .grid-gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.15rem;
     }
 
     .card {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.25rem;
+      padding: 1.15rem;
       box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.65rem;
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
       position: relative;
     }
@@ -793,48 +798,44 @@
 
     .card-title {
       margin: 0;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: var(--text-main);
-      line-height: 1.35;
+      line-height: 1.3;
     }
 
     .card-category {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--primary);
-      margin-block-end: 0.25rem;
+      margin-block-end: 0.15rem;
     }
 
-    .card-desc {
-      font-size: 0.825rem;
-      color: var(--text-muted);
-      line-height: 1.45;
-      flex: 1 0 auto;
+    .card-filename {
+      font-family: var(--font-mono);
+      font-size: 0.725rem;
+      color: var(--primary);
+      word-break: break-all;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-block-start: auto;
+      padding-block-start: 0.4rem;
     }
 
     .card-footer {
       border-top: 1px solid var(--border-color);
-      padding-block-start: 0.75rem;
-      margin-block-start: auto;
+      padding-block-start: 0.65rem;
+      margin-block-start: 0.35rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .card-meta {
-      font-size: 0.775rem;
-      color: var(--text-subtle);
-    }
-
-    .card-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+      justify-content: flex-end;
+      gap: 0.45rem;
     }
 
     /* Empty state */
@@ -860,17 +861,17 @@
       block-size: 100vh;
     }
     .doc-viewer-panel:fullscreen .pdf-frame-container {
-      block-size: calc(100vh - 120px);
+      block-size: calc(100vh - 110px);
     }
 
     /* Footer */
     .site-footer {
       background: var(--bg-surface);
       border-top: 1px solid var(--border-color);
-      padding-block: 2rem;
+      padding-block: 1.5rem;
       padding-inline: 1.5rem;
       margin-block-start: auto;
-      font-size: 0.85rem;
+      font-size: 0.825rem;
       color: var(--text-muted);
     }
 
@@ -898,10 +899,10 @@
       right: 1.5rem;
       background: var(--primary-hover);
       color: #ffffff;
-      padding: 0.6rem 1.1rem;
+      padding: 0.55rem 1rem;
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-lg);
-      font-size: 0.85rem;
+      font-size: 0.825rem;
       font-weight: 600;
       z-index: 9999;
       opacity: 0;
@@ -931,14 +932,14 @@
 
       <div class="header-actions">
         <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline" id="repo-link" title="View Source on GitHub">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
           <span>Repository</span>
         </a>
 
         <button type="button" class="btn btn-outline btn-icon" id="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle Theme">
-          <svg class="theme-icon-light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="theme-icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
             <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -963,11 +964,6 @@
         <span class="team-badge">Josh Stott</span> &bull;
         <span class="team-badge">Cade Bray</span>
       </div>
-      <div class="stats-summary">
-        <span class="stat-pill">📄 9 Documents</span>
-        <span class="stat-pill">📑 45 Total Pages</span>
-        <span class="stat-pill">🗄️ SQLite Data Model</span>
-      </div>
     </div>
   </aside>
 
@@ -986,10 +982,10 @@
               type="search" 
               id="doc-search" 
               class="search-input" 
-              placeholder="Filter by keyword (e.g., 'wireframes', 'erd', 'appointment', 'donor', 'activity')..." 
+              placeholder="Filter by filename, title, or tag (e.g., 'wireframes', 'erd', 'appointments')..." 
               autocomplete="off"
               spellcheck="false"
-              aria-label="Filter documents by title, category, or tags"
+              aria-label="Filter documents by filename, title, category, or tags"
             >
             <button type="button" id="clear-search" class="clear-search-btn" aria-label="Clear search">✕</button>
           </div>
@@ -997,14 +993,14 @@
 
         <div class="view-toggles" role="group" aria-label="Display View Layout">
           <button type="button" class="view-btn active" id="btn-view-split" aria-pressed="true">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="9" y1="3" x2="9" y2="21"></line>
             </svg>
             <span>Split Explorer</span>
           </button>
           <button type="button" class="view-btn" id="btn-view-grid" aria-pressed="false">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="3" y="3" width="7" height="7"></rect>
               <rect x="14" y="3" width="7" height="7"></rect>
               <rect x="14" y="14" width="7" height="7"></rect>
@@ -1018,10 +1014,10 @@
       <!-- Category Filter Pills -->
       <div class="filter-pills-row" role="group" aria-label="Category Filters">
         <span class="filter-label">Module:</span>
-        <button type="button" class="filter-pill active" data-category="all">All Documents (<span id="count-all">9</span>)</button>
-        <button type="button" class="filter-pill" data-category="Architecture & Data">Data Architecture (<span id="count-arch">1</span>)</button>
-        <button type="button" class="filter-pill" data-category="Appointment Management">Appointment Management (<span id="count-app">4</span>)</button>
-        <button type="button" class="filter-pill" data-category="Donor Account Management">Donor Account Management (<span id="count-donor">4</span>)</button>
+        <button type="button" class="filter-pill active" data-category="all">All Documents</button>
+        <button type="button" class="filter-pill" data-category="Architecture & Data">Data Architecture</button>
+        <button type="button" class="filter-pill" data-category="Appointment Management">Appointment Management</button>
+        <button type="button" class="filter-pill" data-category="Donor Account Management">Donor Account Management</button>
       </div>
 
       <!-- Type Filter Pills -->
@@ -1042,7 +1038,7 @@
       <nav class="doc-sidebar" aria-label="Document List">
         <div class="sidebar-header">
           <h2>Design Documents</h2>
-          <span class="doc-count-tag" id="sidebar-match-count">9 of 9</span>
+          <span class="doc-count-tag" id="sidebar-match-count">9 Documents</span>
         </div>
         <div class="doc-list-scroll" id="doc-list-container" role="listbox" aria-label="Selectable Document List">
           <!-- Populated by JavaScript -->
@@ -1058,7 +1054,7 @@
           </div>
           <div class="viewer-actions">
             <a href="#" id="action-open-tab" target="_blank" rel="noopener noreferrer" class="btn btn-outline" title="Open PDF in a new browser tab">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -1066,7 +1062,7 @@
               <span>Open in Tab</span>
             </a>
             <a href="#" id="action-download" download class="btn btn-primary" title="Download this PDF file">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -1074,14 +1070,14 @@
               <span>Download PDF</span>
             </a>
             <button type="button" id="action-copy-link" class="btn btn-outline" title="Copy link to this document">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
               <span>Share</span>
             </button>
             <button type="button" id="action-fullscreen" class="btn btn-outline btn-icon" title="Toggle Fullscreen Viewer" aria-label="Toggle Fullscreen">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <polyline points="9 21 3 21 3 15"></polyline>
                 <line x1="21" y1="3" x2="14" y2="10"></line>
@@ -1093,13 +1089,10 @@
 
         <div class="viewer-info-strip">
           <div class="viewer-meta-tags">
-            <span class="viewer-meta-item" id="active-pages">📄 1 Page</span>
-            <span class="viewer-meta-item" id="active-size">💾 60.9 KB</span>
             <span class="viewer-meta-item" id="active-type-badge">🗄️ ERD</span>
+            <code class="viewer-filename-badge" id="active-filename">Biomat ERDpdf.pdf</code>
           </div>
-          <div id="active-description" style="max-inline-size: 700px; font-size: 0.825rem;">
-            Database Entity-Relationship Diagram modeling tables and foreign key relationships.
-          </div>
+          <div id="active-tags" class="tag-list"></div>
         </div>
 
         <!-- Embedded PDF Viewer -->
@@ -1151,7 +1144,7 @@
     (function () {
       "use strict";
 
-      // Design Documents Registry with metadata
+      // Design Documents Registry
       const documents = [
         {
           id: "biomat-erd",
@@ -1161,10 +1154,7 @@
           type: "ERD",
           badgeClass: "badge-erd",
           typeIcon: "🗄️",
-          pages: 1,
-          size: "60.9 KB",
-          description: "Database Entity-Relationship Diagram detailing SQLite tables (users, donors, centers, appointments, donations, personnel, compensation) and foreign key relationships.",
-          tags: ["erd", "database", "sqlite", "schema", "tables", "relationships", "architecture"]
+          tags: ["erd", "database", "sqlite", "schema", "tables", "relationships"]
         },
         {
           id: "appointment-use-cases",
@@ -1174,10 +1164,7 @@
           type: "Use Cases",
           badgeClass: "badge-usecases",
           typeIcon: "📋",
-          pages: 10,
-          size: "150.9 KB",
-          description: "Comprehensive use case specifications detailing scheduling, slot availability, rescheduling, cancellations, walk-ins, and donor intake flows.",
-          tags: ["appointment", "use cases", "specifications", "scheduling", "workflow", "preconditions"]
+          tags: ["appointments", "use-cases", "scheduling", "workflow", "intake"]
         },
         {
           id: "appointment-use-case-model",
@@ -1187,10 +1174,7 @@
           type: "Use Case Model",
           badgeClass: "badge-usecases",
           typeIcon: "🗺️",
-          pages: 2,
-          size: "127.1 KB",
-          description: "UML use case diagrams mapping system boundaries and actor interactions (Donors, Staff, Medical Personnel) for appointment workflows.",
-          tags: ["appointment", "use case model", "uml", "actors", "diagram", "boundary"]
+          tags: ["appointments", "use-case-model", "uml", "actors", "boundary"]
         },
         {
           id: "appointment-activity-diagrams",
@@ -1200,10 +1184,7 @@
           type: "Activity Diagrams",
           badgeClass: "badge-activity",
           typeIcon: "⚡",
-          pages: 5,
-          size: "255.3 KB",
-          description: "Visual UML activity flows illustrating appointment scheduling, verification, check-in, and slot management logic.",
-          tags: ["appointment", "activity diagrams", "process", "workflow", "swimlanes", "logic"]
+          tags: ["appointments", "activity-diagrams", "process", "workflow", "logic"]
         },
         {
           id: "appointment-wireframes",
@@ -1213,10 +1194,7 @@
           type: "Wireframes",
           badgeClass: "badge-wireframes",
           typeIcon: "📐",
-          pages: 5,
-          size: "271.5 KB",
-          description: "UI/UX wireframes demonstrating donation center selection, time slot picking, appointment booking receipts, and status management.",
-          tags: ["appointment", "wireframes", "ui", "ux", "mockups", "screens", "prototype"]
+          tags: ["appointments", "wireframes", "ui", "ux", "mockups", "screens"]
         },
         {
           id: "donor-use-cases",
@@ -1226,10 +1204,7 @@
           type: "Use Cases",
           badgeClass: "badge-usecases",
           typeIcon: "📋",
-          pages: 9,
-          size: "156.3 KB",
-          description: "Complete use case specifications covering donor self-registration, credential management, profile updates, and health questionnaires.",
-          tags: ["donor", "account", "use cases", "registration", "profile", "specifications", "security"]
+          tags: ["donors", "accounts", "use-cases", "registration", "profile", "security"]
         },
         {
           id: "donor-use-case-model",
@@ -1239,10 +1214,7 @@
           type: "Use Case Model",
           badgeClass: "badge-usecases",
           typeIcon: "🗺️",
-          pages: 2,
-          size: "220.4 KB",
-          description: "UML use case model detailing user authentication, profile self-service, account recovery, and administrative account controls.",
-          tags: ["donor", "account", "use case model", "uml", "actors", "diagram", "authentication"]
+          tags: ["donors", "accounts", "use-case-model", "uml", "actors", "auth"]
         },
         {
           id: "donor-activity-diagrams",
@@ -1252,10 +1224,7 @@
           type: "Activity Diagrams",
           badgeClass: "badge-activity",
           typeIcon: "⚡",
-          pages: 6,
-          size: "308.9 KB",
-          description: "Process flows and activity diagrams for donor sign-up validation, profile edits, password updates, and account self-deletion.",
-          tags: ["donor", "account", "activity diagrams", "process", "workflow", "validation", "logic"]
+          tags: ["donors", "accounts", "activity-diagrams", "process", "workflow", "validation"]
         },
         {
           id: "donor-wireframes",
@@ -1265,10 +1234,7 @@
           type: "Wireframes",
           badgeClass: "badge-wireframes",
           typeIcon: "📐",
-          pages: 5,
-          size: "455.0 KB",
-          description: "Screen mockups and UI wireframes for donor registration, secure login, profile overview dashboard, medical screening questionnaires, and account settings.",
-          tags: ["donor", "account", "wireframes", "ui", "ux", "dashboard", "screens", "mockups"]
+          tags: ["donors", "accounts", "wireframes", "ui", "ux", "dashboard", "screens"]
         }
       ];
 
@@ -1277,7 +1243,7 @@
       let activeCategory = "all";
       let activeType = "all";
       let searchQuery = "";
-      let activeView = "split"; // 'split' or 'grid'
+      let activeView = "split";
 
       // DOM Elements
       const docSearchInput = document.getElementById("doc-search");
@@ -1293,10 +1259,9 @@
       const pdfFrame = document.getElementById("pdf-frame");
       const activeTitle = document.getElementById("active-title");
       const activeCategoryBreadcrumb = document.getElementById("active-category");
-      const activePages = document.getElementById("active-pages");
-      const activeSize = document.getElementById("active-size");
+      const activeFilename = document.getElementById("active-filename");
       const activeTypeBadge = document.getElementById("active-type-badge");
-      const activeDescription = document.getElementById("active-description");
+      const activeTags = document.getElementById("active-tags");
       const actionOpenTab = document.getElementById("action-open-tab");
       const actionDownload = document.getElementById("action-download");
       const actionCopyLink = document.getElementById("action-copy-link");
@@ -1315,22 +1280,19 @@
       function getFilteredDocuments() {
         const query = searchQuery.trim().toLowerCase();
         return documents.filter(doc => {
-          // Category filter
           if (activeCategory !== "all" && doc.category !== activeCategory) {
             return false;
           }
-          // Type filter
           if (activeType !== "all" && doc.type !== activeType) {
             return false;
           }
-          // Search query
           if (query) {
             const inTitle = doc.title.toLowerCase().includes(query);
+            const inFilename = doc.filename.toLowerCase().includes(query);
             const inCategory = doc.category.toLowerCase().includes(query);
             const inType = doc.type.toLowerCase().includes(query);
-            const inDesc = doc.description.toLowerCase().includes(query);
             const inTags = doc.tags.some(tag => tag.toLowerCase().includes(query));
-            return inTitle || inCategory || inType || inDesc || inTags;
+            return inTitle || inFilename || inCategory || inType || inTags;
           }
           return true;
         });
@@ -1347,10 +1309,9 @@
         // Update viewer texts and links
         activeTitle.textContent = doc.title;
         activeCategoryBreadcrumb.textContent = doc.category;
-        activePages.textContent = "📄 " + doc.pages + (doc.pages === 1 ? " Page" : " Pages");
-        activeSize.textContent = "💾 " + doc.size;
+        activeFilename.textContent = doc.filename;
         activeTypeBadge.textContent = doc.typeIcon + " " + doc.type;
-        activeDescription.textContent = doc.description;
+        activeTags.innerHTML = doc.tags.map(t => `<span class="tag-pill">#${t}</span>`).join("");
 
         actionOpenTab.href = encodedUrl;
         fallbackOpenLink.href = encodedUrl;
@@ -1385,8 +1346,8 @@
         if (filtered.length === 0) {
           docListContainer.innerHTML = `
             <div style="padding: 1.5rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
-              No documents match your search filters.<br>
-              <button type="button" class="btn btn-outline" id="reset-filters-btn" style="margin-block-start: 0.75rem; font-size: 0.775rem;">Reset Filters</button>
+              No documents match your filters.<br>
+              <button type="button" class="btn btn-outline" id="reset-filters-btn" style="margin-block-start: 0.75rem; font-size: 0.75rem;">Reset Filters</button>
             </div>
           `;
           const resetBtn = document.getElementById("reset-filters-btn");
@@ -1422,15 +1383,16 @@
             btn.innerHTML = `
               <div class="doc-item-top">
                 <span class="doc-type-badge ${doc.badgeClass}">${doc.typeIcon} ${doc.type}</span>
-                <span class="doc-page-count">${doc.pages}p &bull; ${doc.size}</span>
               </div>
               <div class="doc-item-title">${doc.title}</div>
-              <div class="doc-item-desc">${doc.description}</div>
+              <div class="doc-item-filename">${doc.filename}</div>
+              <div class="tag-list">
+                ${doc.tags.map(tag => `<span class="tag-pill">#${tag}</span>`).join("")}
+              </div>
             `;
 
             btn.addEventListener("click", () => {
               selectDocument(doc.id);
-              // On mobile, scroll viewer into view
               if (window.innerWidth <= 980) {
                 viewerContainer.scrollIntoView({ behavior: "smooth" });
               }
@@ -1440,7 +1402,6 @@
           });
         });
 
-        // If the currently active doc is filtered out, select the first visible doc
         const isCurrentVisible = filtered.some(d => d.id === activeDocId);
         if (!isCurrentVisible && filtered.length > 0) {
           selectDocument(filtered[0].id, false);
@@ -1457,7 +1418,7 @@
             <div class="empty-state">
               <div class="empty-state-icon">🔍</div>
               <h3>No matching documents</h3>
-              <p>Try searching for a different keyword or resetting your category/type filters.</p>
+              <p>Try searching for a different keyword or resetting your filters.</p>
               <button type="button" class="btn btn-outline" id="grid-reset-filters-btn" style="margin-block-start: 1rem;">Reset Filters</button>
             </div>
           `;
@@ -1481,17 +1442,17 @@
               </div>
               <span class="doc-type-badge ${doc.badgeClass}">${doc.typeIcon} ${doc.type}</span>
             </div>
-            <div class="card-desc">${doc.description}</div>
+            <div class="card-filename">${doc.filename}</div>
+            <div class="card-tags">
+              ${doc.tags.map(tag => `<span class="tag-pill">#${tag}</span>`).join("")}
+            </div>
             <div class="card-footer">
-              <span class="card-meta">📄 ${doc.pages} ${doc.pages === 1 ? "page" : "pages"} &bull; 💾 ${doc.size}</span>
-              <div class="card-actions">
-                <button type="button" class="btn btn-outline preview-btn" data-doc-id="${doc.id}">
-                  Preview
-                </button>
-                <a href="${encodedUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" title="Open in new tab">
-                  Open ↗
-                </a>
-              </div>
+              <button type="button" class="btn btn-outline preview-btn" data-doc-id="${doc.id}">
+                Preview
+              </button>
+              <a href="${encodedUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" title="Open in new tab">
+                Open ↗
+              </a>
             </div>
           `;
 
@@ -1644,7 +1605,8 @@
 
         // Copy Share Link
         actionCopyLink.addEventListener("click", () => {
-          const url = window.location.origin + window.location.pathname + "#doc=" + encodeURIComponent(documents.find(d => d.id === activeDocId).filename);
+          const activeDoc = documents.find(d => d.id === activeDocId);
+          const url = window.location.origin + window.location.pathname + "#doc=" + encodeURIComponent(activeDoc.filename);
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(url).then(() => {
               showToast("Direct link copied to clipboard!");
@@ -1684,7 +1646,6 @@
 
         // Keyboard navigation shortcuts
         window.addEventListener("keydown", (e) => {
-          // Focus search on '/'
           if (e.key === "/" && document.activeElement !== docSearchInput) {
             e.preventDefault();
             docSearchInput.focus();

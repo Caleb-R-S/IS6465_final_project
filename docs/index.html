@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Design document explorer for Biomat USA Donor Services course project (IS 6465). View and download system ERD, use cases, activity diagrams, and wireframes.">
+  <title>Biomat USA — System Design Document Explorer</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      /* Light Theme (Biomat Brand) */
+      --bg-page: #f7f8f4;
+      --bg-surface: #ffffff;
+      --bg-surface-alt: #f0f4f1;
+      --bg-surface-hover: #e3ede6;
+      --border-color: #d8e2da;
+      --border-focus: #e6a650;
+      --text-main: #182822;
+      --text-muted: #566961;
+      --text-subtle: #798c84;
+      --primary: #245c45;
+      --primary-hover: #194733;
+      --primary-active: #133828;
+      --primary-contrast: #ffffff;
+      --badge-erd-bg: #e0f2fe;
+      --badge-erd-text: #0369a1;
+      --badge-usecase-bg: #fef3c7;
+      --badge-usecase-text: #92400e;
+      --badge-activity-bg: #f3e8ff;
+      --badge-activity-text: #6b21a8;
+      --badge-wireframe-bg: #dcfce7;
+      --badge-wireframe-text: #166534;
+      --shadow-sm: 0 1px 2px rgba(24, 40, 34, 0.05);
+      --shadow-md: 0 4px 12px rgba(24, 40, 34, 0.08);
+      --shadow-lg: 0 12px 28px rgba(24, 40, 34, 0.12);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --transition: 0.18s ease-in-out;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #101714;
+      --bg-surface: #17221d;
+      --bg-surface-alt: #1f2e28;
+      --bg-surface-hover: #293d35;
+      --border-color: #2b3d35;
+      --text-main: #e7eee9;
+      --text-muted: #9eb1a8;
+      --text-subtle: #73877e;
+      --primary: #388665;
+      --primary-hover: #4ba67e;
+      --primary-active: #5bc295;
+      --primary-contrast: #0d1512;
+      --badge-erd-bg: #082f49;
+      --badge-erd-text: #7dd3fc;
+      --badge-usecase-bg: #451a03;
+      --badge-usecase-text: #fde68a;
+      --badge-activity-bg: #3b0764;
+      --badge-activity-text: #d8b4fe;
+      --badge-wireframe-bg: #052e16;
+      --badge-wireframe-text: #86efac;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-page: #101714;
+        --bg-surface: #17221d;
+        --bg-surface-alt: #1f2e28;
+        --bg-surface-hover: #293d35;
+        --border-color: #2b3d35;
+        --text-main: #e7eee9;
+        --text-muted: #9eb1a8;
+        --text-subtle: #73877e;
+        --primary: #388665;
+        --primary-hover: #4ba67e;
+        --primary-active: #5bc295;
+        --primary-contrast: #0d1512;
+        --badge-erd-bg: #082f49;
+        --badge-erd-text: #7dd3fc;
+        --badge-usecase-bg: #451a03;
+        --badge-usecase-text: #fde68a;
+        --badge-activity-bg: #3b0764;
+        --badge-activity-text: #d8b4fe;
+        --badge-wireframe-bg: #052e16;
+        --badge-wireframe-text: #86efac;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      background-color: var(--bg-page);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-block-size: 100vh;
+    }
+
+    /* Accessibility focus styles */
+    :focus-visible {
+      outline: 3px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -3rem;
+      left: 1rem;
+      background: var(--primary);
+      color: var(--primary-contrast);
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+      border-radius: var(--radius-sm);
+      transition: top 0.2s ease;
+      font-weight: 600;
+    }
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    /* Header */
+    .site-header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding-block: 1rem;
+      padding-inline: 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-inline-size: 1440px;
+      margin-inline: auto;
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: safe center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      inline-size: 42px;
+      block-size: 42px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #194733, #2f7a5b);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      user-select: none;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      margin: 0;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: safe center;
+      gap: 0.6rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding-block: 0.5rem;
+      padding-inline: 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color var(--transition), border-color var(--transition), color var(--transition), transform 0.1s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--primary-contrast);
+    }
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      background-color: var(--bg-surface);
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background-color: var(--bg-surface-alt);
+      border-color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .btn-icon {
+      padding: 0.5rem;
+      inline-size: 38px;
+      block-size: 38px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Sub-header / Meta banner */
+    .project-banner {
+      background: var(--bg-surface-alt);
+      border-bottom: 1px solid var(--border-color);
+      padding-block: 0.65rem;
+      padding-inline: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .banner-inner {
+      max-inline-size: 1440px;
+      margin-inline: auto;
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .team-credits {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .team-badge {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .stats-summary {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding-block: 0.15rem;
+      padding-inline: 0.6rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.775rem;
+    }
+
+    /* App container */
+    .app-main {
+      flex: 1 0 auto;
+      max-inline-size: 1440px;
+      inline-size: 100%;
+      margin-inline: auto;
+      padding-block: 1.5rem;
+      padding-inline: 1.5rem;
+    }
+
+    /* Controls bar */
+    .controls-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-sm);
+      margin-block-end: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .search-row {
+      display: flex;
+      align-items: safe center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .search-row search {
+      flex: 1 1 300px;
+      min-inline-size: 0;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      inline-size: 100%;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      inline-size: 18px;
+      block-size: 18px;
+      color: var(--text-subtle);
+      pointer-events: none;
+    }
+
+    .search-input {
+      inline-size: 100%;
+      padding-block: 0.6rem;
+      padding-inline: 2.5rem 2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-surface-alt);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      transition: border-color var(--transition), background-color var(--transition);
+    }
+
+    .search-input:focus {
+      background-color: var(--bg-surface);
+      border-color: var(--primary);
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 0.6rem;
+      background: none;
+      border: none;
+      color: var(--text-subtle);
+      cursor: pointer;
+      padding: 0.25rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .clear-search-btn:hover {
+      color: var(--text-main);
+    }
+    .clear-search-btn.active {
+      display: flex;
+    }
+
+    .view-toggles {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.25rem;
+    }
+
+    .view-btn {
+      background: none;
+      border: none;
+      padding-block: 0.4rem;
+      padding-inline: 0.75rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all var(--transition);
+    }
+
+    .view-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-pills-row {
+      display: flex;
+      align-items: safe center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.775rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: var(--text-subtle);
+      margin-inline-end: 0.25rem;
+    }
+
+    .filter-pill {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding-block: 0.25rem;
+      padding-inline: 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .filter-pill:hover {
+      background: var(--bg-surface-hover);
+      color: var(--text-main);
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--primary-contrast);
+      font-weight: 600;
+    }
+
+    /* Layout modes: Split Explorer vs Grid */
+    .explorer-split {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .explorer-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar Document List */
+    .doc-sidebar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: sticky;
+      top: 5.5rem;
+      max-block-size: calc(100vh - 7rem);
+    }
+
+    .sidebar-header {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface-alt);
+    }
+
+    .sidebar-header h2 {
+      margin: 0;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .doc-count-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 0.1rem 0.5rem;
+      border-radius: 9999px;
+    }
+
+    .doc-list-scroll {
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
+      padding: 0.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .category-group-title {
+      font-size: 0.725rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-subtle);
+      padding: 0.5rem 0.6rem 0.2rem;
+    }
+
+    .doc-item-btn {
+      inline-size: 100%;
+      text-align: left;
+      background: none;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      padding: 0.7rem 0.75rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      transition: background-color var(--transition), border-color var(--transition);
+      min-inline-size: 0;
+    }
+
+    .doc-item-btn:hover {
+      background-color: var(--bg-surface-alt);
+    }
+
+    .doc-item-btn.active {
+      background-color: var(--bg-surface-alt);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .doc-item-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .doc-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .badge-erd {
+      background-color: var(--badge-erd-bg);
+      color: var(--badge-erd-text);
+    }
+    .badge-usecases {
+      background-color: var(--badge-usecase-bg);
+      color: var(--badge-usecase-text);
+    }
+    .badge-activity {
+      background-color: var(--badge-activity-bg);
+      color: var(--badge-activity-text);
+    }
+    .badge-wireframes {
+      background-color: var(--badge-wireframe-bg);
+      color: var(--badge-wireframe-text);
+    }
+
+    .doc-page-count {
+      font-size: 0.725rem;
+      color: var(--text-subtle);
+      font-weight: 500;
+    }
+
+    .doc-item-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.35;
+      min-inline-size: 0;
+      word-break: break-word;
+    }
+
+    .doc-item-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Main Viewer Panel */
+    .doc-viewer-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-inline-size: 0;
+    }
+
+    .viewer-toolbar {
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      display: flex;
+      align-items: safe center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .viewer-title-area {
+      min-inline-size: 0;
+      flex: 1 1 250px;
+    }
+
+    .viewer-breadcrumb {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-block-end: 0.2rem;
+    }
+
+    .viewer-title {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .viewer-actions {
+      display: flex;
+      align-items: safe center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .viewer-info-strip {
+      background: var(--bg-surface-alt);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .viewer-meta-tags {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+    }
+
+    .viewer-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+    }
+
+    /* Embedded PDF frame */
+    .pdf-frame-container {
+      position: relative;
+      background: #3f4744;
+      inline-size: 100%;
+      block-size: 780px;
+      min-block-size: 550px;
+    }
+
+    @media (max-height: 900px) {
+      .pdf-frame-container {
+        block-size: 70vh;
+      }
+    }
+
+    .pdf-frame {
+      inline-size: 100%;
+      block-size: 100%;
+      border: none;
+      display: block;
+      background: var(--bg-surface);
+    }
+
+    /* Fallback banner for browsers/mobiles that do not display PDF inline */
+    .viewer-fallback-banner {
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface-alt);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+
+    .viewer-fallback-banner a {
+      font-weight: 600;
+    }
+
+    /* Grid View Gallery */
+    .grid-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    .card-category {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-block-end: 0.25rem;
+    }
+
+    .card-desc {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      flex: 1 0 auto;
+    }
+
+    .card-footer {
+      border-top: 1px solid var(--border-color);
+      padding-block-start: 0.75rem;
+      margin-block-start: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .card-meta {
+      font-size: 0.775rem;
+      color: var(--text-subtle);
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 3rem 1.5rem;
+      text-align: center;
+      background: var(--bg-surface);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    .empty-state-icon {
+      font-size: 2.5rem;
+      margin-block-end: 0.5rem;
+    }
+
+    /* Fullscreen Mode */
+    .doc-viewer-panel:fullscreen {
+      border-radius: 0;
+      border: none;
+      block-size: 100vh;
+    }
+    .doc-viewer-panel:fullscreen .pdf-frame-container {
+      block-size: calc(100vh - 120px);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      padding-block: 2rem;
+      padding-inline: 1.5rem;
+      margin-block-start: auto;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      max-inline-size: 1440px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--primary-hover);
+      color: #ffffff;
+      padding: 0.6rem 1.1rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-wrap">
+        <div class="brand-logo" aria-hidden="true">B</div>
+        <div class="brand-text">
+          <h1>Biomat USA &bull; Design Document Explorer</h1>
+          <p>IS 6465 Course Project &bull; Architecture, Specifications &amp; Wireframes</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline" id="repo-link" title="View Source on GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>Repository</span>
+        </a>
+
+        <button type="button" class="btn btn-outline btn-icon" id="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle Theme">
+          <svg class="theme-icon-light" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Project Info Meta Banner -->
+  <aside class="project-banner" aria-label="Project Team and Summary">
+    <div class="banner-inner">
+      <div class="team-credits">
+        <span>Team Contributors:</span>
+        <span class="team-badge">Caleb Syndergaard</span> &bull;
+        <span class="team-badge">Josh Stott</span> &bull;
+        <span class="team-badge">Cade Bray</span>
+      </div>
+      <div class="stats-summary">
+        <span class="stat-pill">📄 9 Documents</span>
+        <span class="stat-pill">📑 45 Total Pages</span>
+        <span class="stat-pill">🗄️ SQLite Data Model</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Document Explorer Workspace -->
+  <main id="main-content" class="app-main">
+    <!-- Filter & Search Bar -->
+    <section class="controls-card" aria-label="Document filters and search controls">
+      <div class="search-row">
+        <search>
+          <div class="search-input-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="search" 
+              id="doc-search" 
+              class="search-input" 
+              placeholder="Filter by keyword (e.g., 'wireframes', 'erd', 'appointment', 'donor', 'activity')..." 
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Filter documents by title, category, or tags"
+            >
+            <button type="button" id="clear-search" class="clear-search-btn" aria-label="Clear search">✕</button>
+          </div>
+        </search>
+
+        <div class="view-toggles" role="group" aria-label="Display View Layout">
+          <button type="button" class="view-btn active" id="btn-view-split" aria-pressed="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+            <span>Split Explorer</span>
+          </button>
+          <button type="button" class="view-btn" id="btn-view-grid" aria-pressed="false">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span>Card Gallery</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="filter-pills-row" role="group" aria-label="Category Filters">
+        <span class="filter-label">Module:</span>
+        <button type="button" class="filter-pill active" data-category="all">All Documents (<span id="count-all">9</span>)</button>
+        <button type="button" class="filter-pill" data-category="Architecture & Data">Data Architecture (<span id="count-arch">1</span>)</button>
+        <button type="button" class="filter-pill" data-category="Appointment Management">Appointment Management (<span id="count-app">4</span>)</button>
+        <button type="button" class="filter-pill" data-category="Donor Account Management">Donor Account Management (<span id="count-donor">4</span>)</button>
+      </div>
+
+      <!-- Type Filter Pills -->
+      <div class="filter-pills-row" role="group" aria-label="Document Type Filters">
+        <span class="filter-label">Doc Type:</span>
+        <button type="button" class="filter-pill active" data-type="all">All Types</button>
+        <button type="button" class="filter-pill" data-type="ERD">ERD</button>
+        <button type="button" class="filter-pill" data-type="Use Cases">Use Cases</button>
+        <button type="button" class="filter-pill" data-type="Use Case Model">Use Case Model</button>
+        <button type="button" class="filter-pill" data-type="Activity Diagrams">Activity Diagrams</button>
+        <button type="button" class="filter-pill" data-type="Wireframes">Wireframes</button>
+      </div>
+    </section>
+
+    <!-- VIEW 1: Split Explorer (Sidebar + Embedded PDF View) -->
+    <section id="view-split" class="explorer-split" aria-label="Split Document Explorer">
+      <!-- Sidebar Navigation -->
+      <nav class="doc-sidebar" aria-label="Document List">
+        <div class="sidebar-header">
+          <h2>Design Documents</h2>
+          <span class="doc-count-tag" id="sidebar-match-count">9 of 9</span>
+        </div>
+        <div class="doc-list-scroll" id="doc-list-container" role="listbox" aria-label="Selectable Document List">
+          <!-- Populated by JavaScript -->
+        </div>
+      </nav>
+
+      <!-- Main Viewer Area -->
+      <article class="doc-viewer-panel" id="viewer-container" aria-label="Document Preview and Actions">
+        <div class="viewer-toolbar">
+          <div class="viewer-title-area">
+            <div class="viewer-breadcrumb" id="active-category">Architecture &amp; Data</div>
+            <h2 class="viewer-title" id="active-title">Biomat ERD</h2>
+          </div>
+          <div class="viewer-actions">
+            <a href="#" id="action-open-tab" target="_blank" rel="noopener noreferrer" class="btn btn-outline" title="Open PDF in a new browser tab">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+              <span>Open in Tab</span>
+            </a>
+            <a href="#" id="action-download" download class="btn btn-primary" title="Download this PDF file">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download PDF</span>
+            </a>
+            <button type="button" id="action-copy-link" class="btn btn-outline" title="Copy link to this document">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Share</span>
+            </button>
+            <button type="button" id="action-fullscreen" class="btn btn-outline btn-icon" title="Toggle Fullscreen Viewer" aria-label="Toggle Fullscreen">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="viewer-info-strip">
+          <div class="viewer-meta-tags">
+            <span class="viewer-meta-item" id="active-pages">📄 1 Page</span>
+            <span class="viewer-meta-item" id="active-size">💾 60.9 KB</span>
+            <span class="viewer-meta-item" id="active-type-badge">🗄️ ERD</span>
+          </div>
+          <div id="active-description" style="max-inline-size: 700px; font-size: 0.825rem;">
+            Database Entity-Relationship Diagram modeling tables and foreign key relationships.
+          </div>
+        </div>
+
+        <!-- Embedded PDF Viewer -->
+        <div class="pdf-frame-container">
+          <iframe 
+            id="pdf-frame" 
+            class="pdf-frame" 
+            src="Biomat%20ERDpdf.pdf#view=FitH" 
+            title="Design Document PDF Preview"
+            loading="eager"
+          ></iframe>
+        </div>
+
+        <!-- Mobile & Fallback note -->
+        <div class="viewer-fallback-banner">
+          <span>💡 <em>Browser not rendering the embedded PDF preview?</em></span>
+          <div>
+            <a href="Biomat%20ERDpdf.pdf" id="fallback-open-link" target="_blank" rel="noopener noreferrer">Click here to open directly in a separate browser tab &rarr;</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- VIEW 2: Grid Gallery View (Alternate card deck) -->
+    <section id="view-grid" class="grid-gallery" style="display: none;" aria-label="Card Gallery of Documents">
+      <!-- Populated by JavaScript -->
+    </section>
+  </main>
+
+  <!-- Toast Notification element -->
+  <div id="toast" class="toast" role="status" aria-live="polite">Link copied to clipboard!</div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <strong>Biomat USA Donor Management System</strong> &bull; IS 6465 Web Based Applications
+      </div>
+      <div class="footer-links">
+        <span>Hosted via GitHub Pages</span>
+        <span>&bull;</span>
+        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to Top &uarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Self-contained JavaScript Logic -->
+  <script>
+    (function () {
+      "use strict";
+
+      // Design Documents Registry with metadata
+      const documents = [
+        {
+          id: "biomat-erd",
+          title: "Biomat ERD (Entity-Relationship Diagram)",
+          filename: "Biomat ERDpdf.pdf",
+          category: "Architecture & Data",
+          type: "ERD",
+          badgeClass: "badge-erd",
+          typeIcon: "🗄️",
+          pages: 1,
+          size: "60.9 KB",
+          description: "Database Entity-Relationship Diagram detailing SQLite tables (users, donors, centers, appointments, donations, personnel, compensation) and foreign key relationships.",
+          tags: ["erd", "database", "sqlite", "schema", "tables", "relationships", "architecture"]
+        },
+        {
+          id: "appointment-use-cases",
+          title: "Appointment Management — Use Cases",
+          filename: "Appointment Management - Use Cases.pdf",
+          category: "Appointment Management",
+          type: "Use Cases",
+          badgeClass: "badge-usecases",
+          typeIcon: "📋",
+          pages: 10,
+          size: "150.9 KB",
+          description: "Comprehensive use case specifications detailing scheduling, slot availability, rescheduling, cancellations, walk-ins, and donor intake flows.",
+          tags: ["appointment", "use cases", "specifications", "scheduling", "workflow", "preconditions"]
+        },
+        {
+          id: "appointment-use-case-model",
+          title: "Appointment Management — Use Case Model",
+          filename: "Appointment Management - Use Case Model.pdf",
+          category: "Appointment Management",
+          type: "Use Case Model",
+          badgeClass: "badge-usecases",
+          typeIcon: "🗺️",
+          pages: 2,
+          size: "127.1 KB",
+          description: "UML use case diagrams mapping system boundaries and actor interactions (Donors, Staff, Medical Personnel) for appointment workflows.",
+          tags: ["appointment", "use case model", "uml", "actors", "diagram", "boundary"]
+        },
+        {
+          id: "appointment-activity-diagrams",
+          title: "Appointment Management — Activity Diagrams",
+          filename: "Appointment Management - Activity Diagrams.pdf",
+          category: "Appointment Management",
+          type: "Activity Diagrams",
+          badgeClass: "badge-activity",
+          typeIcon: "⚡",
+          pages: 5,
+          size: "255.3 KB",
+          description: "Visual UML activity flows illustrating appointment scheduling, verification, check-in, and slot management logic.",
+          tags: ["appointment", "activity diagrams", "process", "workflow", "swimlanes", "logic"]
+        },
+        {
+          id: "appointment-wireframes",
+          title: "Appointment Management — Wireframes",
+          filename: "Appointment Management - Wireframes.pdf",
+          category: "Appointment Management",
+          type: "Wireframes",
+          badgeClass: "badge-wireframes",
+          typeIcon: "📐",
+          pages: 5,
+          size: "271.5 KB",
+          description: "UI/UX wireframes demonstrating donation center selection, time slot picking, appointment booking receipts, and status management.",
+          tags: ["appointment", "wireframes", "ui", "ux", "mockups", "screens", "prototype"]
+        },
+        {
+          id: "donor-use-cases",
+          title: "Donor Account Management — Use Cases",
+          filename: "Donor Account Management - Use Cases.pdf",
+          category: "Donor Account Management",
+          type: "Use Cases",
+          badgeClass: "badge-usecases",
+          typeIcon: "📋",
+          pages: 9,
+          size: "156.3 KB",
+          description: "Complete use case specifications covering donor self-registration, credential management, profile updates, and health questionnaires.",
+          tags: ["donor", "account", "use cases", "registration", "profile", "specifications", "security"]
+        },
+        {
+          id: "donor-use-case-model",
+          title: "Donor Account Management — Use Case Model",
+          filename: "Donor Account Management - Use Case Model.pdf",
+          category: "Donor Account Management",
+          type: "Use Case Model",
+          badgeClass: "badge-usecases",
+          typeIcon: "🗺️",
+          pages: 2,
+          size: "220.4 KB",
+          description: "UML use case model detailing user authentication, profile self-service, account recovery, and administrative account controls.",
+          tags: ["donor", "account", "use case model", "uml", "actors", "diagram", "authentication"]
+        },
+        {
+          id: "donor-activity-diagrams",
+          title: "Donor Account Management — Activity Diagrams",
+          filename: "Donor Account Management - Activity Diagrams.pdf",
+          category: "Donor Account Management",
+          type: "Activity Diagrams",
+          badgeClass: "badge-activity",
+          typeIcon: "⚡",
+          pages: 6,
+          size: "308.9 KB",
+          description: "Process flows and activity diagrams for donor sign-up validation, profile edits, password updates, and account self-deletion.",
+          tags: ["donor", "account", "activity diagrams", "process", "workflow", "validation", "logic"]
+        },
+        {
+          id: "donor-wireframes",
+          title: "Donor Account Management — Wireframes",
+          filename: "Donor Account Management - Wireframes.pdf",
+          category: "Donor Account Management",
+          type: "Wireframes",
+          badgeClass: "badge-wireframes",
+          typeIcon: "📐",
+          pages: 5,
+          size: "455.0 KB",
+          description: "Screen mockups and UI wireframes for donor registration, secure login, profile overview dashboard, medical screening questionnaires, and account settings.",
+          tags: ["donor", "account", "wireframes", "ui", "ux", "dashboard", "screens", "mockups"]
+        }
+      ];
+
+      // State
+      let activeDocId = documents[0].id;
+      let activeCategory = "all";
+      let activeType = "all";
+      let searchQuery = "";
+      let activeView = "split"; // 'split' or 'grid'
+
+      // DOM Elements
+      const docSearchInput = document.getElementById("doc-search");
+      const clearSearchBtn = document.getElementById("clear-search");
+      const docListContainer = document.getElementById("doc-list-container");
+      const gridViewContainer = document.getElementById("view-grid");
+      const splitViewContainer = document.getElementById("view-split");
+      const btnViewSplit = document.getElementById("btn-view-split");
+      const btnViewGrid = document.getElementById("btn-view-grid");
+      const sidebarMatchCount = document.getElementById("sidebar-match-count");
+
+      // Viewer elements
+      const pdfFrame = document.getElementById("pdf-frame");
+      const activeTitle = document.getElementById("active-title");
+      const activeCategoryBreadcrumb = document.getElementById("active-category");
+      const activePages = document.getElementById("active-pages");
+      const activeSize = document.getElementById("active-size");
+      const activeTypeBadge = document.getElementById("active-type-badge");
+      const activeDescription = document.getElementById("active-description");
+      const actionOpenTab = document.getElementById("action-open-tab");
+      const actionDownload = document.getElementById("action-download");
+      const actionCopyLink = document.getElementById("action-copy-link");
+      const actionFullscreen = document.getElementById("action-fullscreen");
+      const fallbackOpenLink = document.getElementById("fallback-open-link");
+      const viewerContainer = document.getElementById("viewer-container");
+      const toastEl = document.getElementById("toast");
+      const themeToggleBtn = document.getElementById("theme-toggle");
+
+      // Format encoded URL for local / GitHub Pages serving
+      function getDocUrl(filename) {
+        return encodeURIComponent(filename);
+      }
+
+      // Filter documents based on state
+      function getFilteredDocuments() {
+        const query = searchQuery.trim().toLowerCase();
+        return documents.filter(doc => {
+          // Category filter
+          if (activeCategory !== "all" && doc.category !== activeCategory) {
+            return false;
+          }
+          // Type filter
+          if (activeType !== "all" && doc.type !== activeType) {
+            return false;
+          }
+          // Search query
+          if (query) {
+            const inTitle = doc.title.toLowerCase().includes(query);
+            const inCategory = doc.category.toLowerCase().includes(query);
+            const inType = doc.type.toLowerCase().includes(query);
+            const inDesc = doc.description.toLowerCase().includes(query);
+            const inTags = doc.tags.some(tag => tag.toLowerCase().includes(query));
+            return inTitle || inCategory || inType || inDesc || inTags;
+          }
+          return true;
+        });
+      }
+
+      // Update active viewer document
+      function selectDocument(docId, updateUrlHash = true) {
+        const doc = documents.find(d => d.id === docId);
+        if (!doc) return;
+
+        activeDocId = docId;
+        const encodedUrl = getDocUrl(doc.filename);
+
+        // Update viewer texts and links
+        activeTitle.textContent = doc.title;
+        activeCategoryBreadcrumb.textContent = doc.category;
+        activePages.textContent = "📄 " + doc.pages + (doc.pages === 1 ? " Page" : " Pages");
+        activeSize.textContent = "💾 " + doc.size;
+        activeTypeBadge.textContent = doc.typeIcon + " " + doc.type;
+        activeDescription.textContent = doc.description;
+
+        actionOpenTab.href = encodedUrl;
+        fallbackOpenLink.href = encodedUrl;
+        actionDownload.href = encodedUrl;
+        actionDownload.setAttribute("download", doc.filename);
+
+        // Update embedded iframe source
+        pdfFrame.src = encodedUrl + "#view=FitH";
+
+        // Highlight active sidebar item
+        document.querySelectorAll(".doc-item-btn").forEach(btn => {
+          const isCurrent = btn.dataset.docId === docId;
+          btn.classList.toggle("active", isCurrent);
+          btn.setAttribute("aria-selected", isCurrent ? "true" : "false");
+        });
+
+        // URL hash synchronization
+        if (updateUrlHash) {
+          const newHash = "#doc=" + encodeURIComponent(doc.filename);
+          if (window.location.hash !== newHash) {
+            history.replaceState(null, "", newHash);
+          }
+        }
+      }
+
+      // Render Sidebar List
+      function renderSidebar() {
+        const filtered = getFilteredDocuments();
+        sidebarMatchCount.textContent = filtered.length + " of " + documents.length;
+        docListContainer.innerHTML = "";
+
+        if (filtered.length === 0) {
+          docListContainer.innerHTML = `
+            <div style="padding: 1.5rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+              No documents match your search filters.<br>
+              <button type="button" class="btn btn-outline" id="reset-filters-btn" style="margin-block-start: 0.75rem; font-size: 0.775rem;">Reset Filters</button>
+            </div>
+          `;
+          const resetBtn = document.getElementById("reset-filters-btn");
+          if (resetBtn) {
+            resetBtn.addEventListener("click", resetFilters);
+          }
+          return;
+        }
+
+        // Group filtered docs by category
+        const groups = {};
+        filtered.forEach(doc => {
+          if (!groups[doc.category]) {
+            groups[doc.category] = [];
+          }
+          groups[doc.category].push(doc);
+        });
+
+        Object.keys(groups).forEach(category => {
+          const titleEl = document.createElement("div");
+          titleEl.className = "category-group-title";
+          titleEl.textContent = category;
+          docListContainer.appendChild(titleEl);
+
+          groups[category].forEach(doc => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "doc-item-btn" + (doc.id === activeDocId ? " active" : "");
+            btn.dataset.docId = doc.id;
+            btn.setAttribute("role", "option");
+            btn.setAttribute("aria-selected", doc.id === activeDocId ? "true" : "false");
+
+            btn.innerHTML = `
+              <div class="doc-item-top">
+                <span class="doc-type-badge ${doc.badgeClass}">${doc.typeIcon} ${doc.type}</span>
+                <span class="doc-page-count">${doc.pages}p &bull; ${doc.size}</span>
+              </div>
+              <div class="doc-item-title">${doc.title}</div>
+              <div class="doc-item-desc">${doc.description}</div>
+            `;
+
+            btn.addEventListener("click", () => {
+              selectDocument(doc.id);
+              // On mobile, scroll viewer into view
+              if (window.innerWidth <= 980) {
+                viewerContainer.scrollIntoView({ behavior: "smooth" });
+              }
+            });
+
+            docListContainer.appendChild(btn);
+          });
+        });
+
+        // If the currently active doc is filtered out, select the first visible doc
+        const isCurrentVisible = filtered.some(d => d.id === activeDocId);
+        if (!isCurrentVisible && filtered.length > 0) {
+          selectDocument(filtered[0].id, false);
+        }
+      }
+
+      // Render Card Grid View
+      function renderGrid() {
+        const filtered = getFilteredDocuments();
+        gridViewContainer.innerHTML = "";
+
+        if (filtered.length === 0) {
+          gridViewContainer.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🔍</div>
+              <h3>No matching documents</h3>
+              <p>Try searching for a different keyword or resetting your category/type filters.</p>
+              <button type="button" class="btn btn-outline" id="grid-reset-filters-btn" style="margin-block-start: 1rem;">Reset Filters</button>
+            </div>
+          `;
+          const resetBtn = document.getElementById("grid-reset-filters-btn");
+          if (resetBtn) {
+            resetBtn.addEventListener("click", resetFilters);
+          }
+          return;
+        }
+
+        filtered.forEach(doc => {
+          const card = document.createElement("article");
+          card.className = "card";
+          const encodedUrl = getDocUrl(doc.filename);
+
+          card.innerHTML = `
+            <div class="card-header">
+              <div>
+                <div class="card-category">${doc.category}</div>
+                <h3 class="card-title">${doc.title}</h3>
+              </div>
+              <span class="doc-type-badge ${doc.badgeClass}">${doc.typeIcon} ${doc.type}</span>
+            </div>
+            <div class="card-desc">${doc.description}</div>
+            <div class="card-footer">
+              <span class="card-meta">📄 ${doc.pages} ${doc.pages === 1 ? "page" : "pages"} &bull; 💾 ${doc.size}</span>
+              <div class="card-actions">
+                <button type="button" class="btn btn-outline preview-btn" data-doc-id="${doc.id}">
+                  Preview
+                </button>
+                <a href="${encodedUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" title="Open in new tab">
+                  Open ↗
+                </a>
+              </div>
+            </div>
+          `;
+
+          const previewBtn = card.querySelector(".preview-btn");
+          previewBtn.addEventListener("click", () => {
+            setViewMode("split");
+            selectDocument(doc.id);
+            viewerContainer.scrollIntoView({ behavior: "smooth" });
+          });
+
+          gridViewContainer.appendChild(card);
+        });
+      }
+
+      function renderAll() {
+        renderSidebar();
+        renderGrid();
+      }
+
+      function resetFilters() {
+        searchQuery = "";
+        activeCategory = "all";
+        activeType = "all";
+        docSearchInput.value = "";
+        clearSearchBtn.classList.remove("active");
+
+        document.querySelectorAll("[data-category]").forEach(el => {
+          el.classList.toggle("active", el.dataset.category === "all");
+        });
+        document.querySelectorAll("[data-type]").forEach(el => {
+          el.classList.toggle("active", el.dataset.type === "all");
+        });
+
+        renderAll();
+      }
+
+      // Switch view mode ('split' vs 'grid')
+      function setViewMode(mode) {
+        activeView = mode;
+        if (mode === "split") {
+          splitViewContainer.style.display = "grid";
+          gridViewContainer.style.display = "none";
+          btnViewSplit.classList.add("active");
+          btnViewSplit.setAttribute("aria-pressed", "true");
+          btnViewGrid.classList.remove("active");
+          btnViewGrid.setAttribute("aria-pressed", "false");
+        } else {
+          splitViewContainer.style.display = "none";
+          gridViewContainer.style.display = "grid";
+          btnViewSplit.classList.remove("active");
+          btnViewSplit.setAttribute("aria-pressed", "false");
+          btnViewGrid.classList.add("active");
+          btnViewGrid.setAttribute("aria-pressed", "true");
+        }
+      }
+
+      // Toast notification helper
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        setTimeout(() => {
+          toastEl.classList.remove("show");
+        }, 2200);
+      }
+
+      // Dark / Light Theme management
+      function initTheme() {
+        const savedTheme = localStorage.getItem("biomat-theme");
+        if (savedTheme) {
+          document.documentElement.setAttribute("data-theme", savedTheme);
+        }
+
+        themeToggleBtn.addEventListener("click", () => {
+          const currentTheme = document.documentElement.getAttribute("data-theme");
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          let nextTheme = "dark";
+
+          if (currentTheme === "dark") {
+            nextTheme = "light";
+          } else if (currentTheme === "light") {
+            nextTheme = "dark";
+          } else {
+            nextTheme = prefersDark ? "light" : "dark";
+          }
+
+          document.documentElement.setAttribute("data-theme", nextTheme);
+          localStorage.setItem("biomat-theme", nextTheme);
+        });
+      }
+
+      // Check URL Hash for direct document link
+      function checkHashRoute() {
+        const hash = window.location.hash;
+        if (!hash) return;
+
+        let targetDoc = null;
+        if (hash.startsWith("#doc=")) {
+          const rawName = decodeURIComponent(hash.replace("#doc=", ""));
+          targetDoc = documents.find(d => d.filename.toLowerCase() === rawName.toLowerCase() || d.id === rawName.toLowerCase());
+        } else {
+          const id = hash.replace("#", "");
+          targetDoc = documents.find(d => d.id === id || d.filename.toLowerCase() === id.toLowerCase());
+        }
+
+        if (targetDoc) {
+          selectDocument(targetDoc.id, false);
+        }
+      }
+
+      // Setup Event Listeners
+      function initEvents() {
+        // Search Input
+        docSearchInput.addEventListener("input", (e) => {
+          searchQuery = e.target.value;
+          clearSearchBtn.classList.toggle("active", searchQuery.length > 0);
+          renderAll();
+        });
+
+        clearSearchBtn.addEventListener("click", () => {
+          docSearchInput.value = "";
+          searchQuery = "";
+          clearSearchBtn.classList.remove("active");
+          docSearchInput.focus();
+          renderAll();
+        });
+
+        // Category Filters
+        document.querySelectorAll("[data-category]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            document.querySelectorAll("[data-category]").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            activeCategory = btn.dataset.category;
+            renderAll();
+          });
+        });
+
+        // Type Filters
+        document.querySelectorAll("[data-type]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            document.querySelectorAll("[data-type]").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            activeType = btn.dataset.type;
+            renderAll();
+          });
+        });
+
+        // View Toggles
+        btnViewSplit.addEventListener("click", () => setViewMode("split"));
+        btnViewGrid.addEventListener("click", () => setViewMode("grid"));
+
+        // Copy Share Link
+        actionCopyLink.addEventListener("click", () => {
+          const url = window.location.origin + window.location.pathname + "#doc=" + encodeURIComponent(documents.find(d => d.id === activeDocId).filename);
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => {
+              showToast("Direct link copied to clipboard!");
+            }).catch(() => {
+              fallbackCopy(url);
+            });
+          } else {
+            fallbackCopy(url);
+          }
+        });
+
+        function fallbackCopy(text) {
+          const temp = document.createElement("input");
+          temp.value = text;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand("copy");
+          document.body.removeChild(temp);
+          showToast("Direct link copied to clipboard!");
+        }
+
+        // Fullscreen Toggle
+        actionFullscreen.addEventListener("click", () => {
+          if (!document.fullscreenElement) {
+            if (viewerContainer.requestFullscreen) {
+              viewerContainer.requestFullscreen();
+            }
+          } else {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            }
+          }
+        });
+
+        // Hash change navigation
+        window.addEventListener("hashchange", checkHashRoute);
+
+        // Keyboard navigation shortcuts
+        window.addEventListener("keydown", (e) => {
+          // Focus search on '/'
+          if (e.key === "/" && document.activeElement !== docSearchInput) {
+            e.preventDefault();
+            docSearchInput.focus();
+          }
+        });
+      }
+
+      // Initialize
+      initTheme();
+      initEvents();
+      checkHashRoute();
+      renderAll();
+      selectDocument(activeDocId, false);
+    })();
+  </script>
+</body>
+</html>

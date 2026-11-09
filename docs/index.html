@@ -35,6 +35,8 @@
       --badge-activity-text: #6b21a8;
       --badge-wireframe-bg: #dcfce7;
       --badge-wireframe-text: #166534;
+      --badge-reflection-bg: #ffe4e6;
+      --badge-reflection-text: #9f1239;
       --shadow-sm: 0 1px 2px rgba(24, 40, 34, 0.05);
       --shadow-md: 0 4px 12px rgba(24, 40, 34, 0.08);
       --shadow-lg: 0 12px 28px rgba(24, 40, 34, 0.12);
@@ -65,6 +67,8 @@
       --badge-activity-text: #d8b4fe;
       --badge-wireframe-bg: #052e16;
       --badge-wireframe-text: #86efac;
+      --badge-reflection-bg: #4c0519;
+      --badge-reflection-text: #fecdd3;
       --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
       --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
       --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
@@ -92,6 +96,8 @@
         --badge-activity-text: #d8b4fe;
         --badge-wireframe-bg: #052e16;
         --badge-wireframe-text: #86efac;
+        --badge-reflection-bg: #4c0519;
+        --badge-reflection-text: #fecdd3;
         --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
         --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
         --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
@@ -604,6 +610,11 @@
       color: var(--badge-wireframe-text);
     }
 
+    .badge-reflection {
+      background-color: var(--badge-reflection-bg);
+      color: var(--badge-reflection-text);
+    }
+
     .doc-item-title {
       font-size: 0.85rem;
       font-weight: 600;
@@ -1001,7 +1012,7 @@
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <input type="search" id="doc-search" class="search-input"
-              placeholder="Filter by filename, title, or tag (e.g., 'wireframes', 'erd', 'appointments')..."
+              placeholder="Filter by filename, title, or tag (e.g., 'reflection', 'wireframes', 'erd')..."
               autocomplete="off" spellcheck="false" aria-label="Filter documents by filename, title, category, or tags">
             <button type="button" id="clear-search" class="clear-search-btn" aria-label="Clear search">✕</button>
           </div>
@@ -1035,8 +1046,8 @@
         <button type="button" class="filter-pill active" data-category="all">All Documents</button>
         <button type="button" class="filter-pill" data-category="Architecture & Data">Data Architecture</button>
         <button type="button" class="filter-pill" data-category="Appointment Management">Appointment Management</button>
-        <button type="button" class="filter-pill" data-category="Donor Account Management">Donor Account
-          Management</button>
+        <button type="button" class="filter-pill" data-category="Donor Account Management">Donor Account Management</button>
+        <button type="button" class="filter-pill" data-category="Project Reflection">Project Reflection</button>
       </div>
 
       <!-- Type Filter Pills -->
@@ -1048,6 +1059,7 @@
         <button type="button" class="filter-pill" data-type="Use Case Model">Use Case Model</button>
         <button type="button" class="filter-pill" data-type="Activity Diagrams">Activity Diagrams</button>
         <button type="button" class="filter-pill" data-type="Wireframes">Wireframes</button>
+        <button type="button" class="filter-pill" data-type="Reflection">Reflection</button>
       </div>
     </section>
 
@@ -1057,7 +1069,7 @@
       <nav class="doc-sidebar" aria-label="Document List">
         <div class="sidebar-header">
           <h2>Design Documents</h2>
-          <span class="doc-count-tag" id="sidebar-match-count">9 Documents</span>
+          <span class="doc-count-tag" id="sidebar-match-count">10 Documents</span>
         </div>
         <div class="doc-list-scroll" id="doc-list-container" role="listbox" aria-label="Selectable Document List">
           <!-- Populated by JavaScript -->
@@ -1256,6 +1268,16 @@
           badgeClass: "badge-wireframes",
           typeIcon: "📐",
           tags: ["donors", "accounts", "wireframes", "ui", "ux", "dashboard", "screens"]
+        },
+        {
+          id: "project-reflection",
+          title: "Project Reflection",
+          filename: "Reflection.pdf",
+          category: "Project Reflection",
+          type: "Reflection",
+          badgeClass: "badge-reflection",
+          typeIcon: "📝",
+          tags: ["reflection", "design-process", "ux", "security", "pii", "team"]
         }
       ];
 
@@ -1572,10 +1594,19 @@
         let targetDoc = null;
         if (hash.startsWith("#doc=")) {
           const rawName = decodeURIComponent(hash.replace("#doc=", ""));
-          targetDoc = documents.find(d => d.filename.toLowerCase() === rawName.toLowerCase() || d.id === rawName.toLowerCase());
+          targetDoc = documents.find(d => 
+            d.filename.toLowerCase() === rawName.toLowerCase() || 
+            d.id === rawName.toLowerCase() ||
+            d.filename.toLowerCase().replace(".pdf", "") === rawName.toLowerCase()
+          );
         } else {
-          const id = hash.replace("#", "");
-          targetDoc = documents.find(d => d.id === id || d.filename.toLowerCase() === id.toLowerCase());
+          const id = hash.replace("#", "").toLowerCase();
+          targetDoc = documents.find(d => 
+            d.id === id || 
+            d.filename.toLowerCase() === id || 
+            d.filename.toLowerCase().replace(".pdf", "") === id ||
+            d.id.includes(id)
+          );
         }
 
         if (targetDoc) {
